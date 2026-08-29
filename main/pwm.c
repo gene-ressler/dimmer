@@ -7,6 +7,7 @@
 #define LEDC_CHANNEL LEDC_CHANNEL_0
 #define LEDC_DUTY_RES LEDC_TIMER_7_BIT
 #define LEDC_PWM_FRAME_RATE 1000
+#define MILS_TO_DUTY(M) ((uint32_t)128 * (M) / 1024)
 
 /** Set up a singleton timer to drive all PWM outputs. */
 void initialize_pwm_timer(void) {
@@ -19,21 +20,26 @@ void initialize_pwm_timer(void) {
 }
 
 /** Initialize a GPIO pin as PWM connected to the singleton timer. */
-void initialize_pwm(struct pwm *pwm, char *name, gpio_num_t gpio, uint16_t init_duty) {
+void initialize_pwm(struct pwm *pwm, char *name, gpio_num_t gpio, uint16_t init_duty_mils) {
   pwm->name = name;
   pwm->gpio = gpio;
-  pwm->duty = init_duty;
+  pwm->duty = MILS_TO_DUTY(init_duty_mils);
   ledc_channel_config_t config = {.speed_mode = LEDC_MODE,
                                   .channel = LEDC_CHANNEL,
                                   .timer_sel = LEDC_TIMER,
                                   .intr_type = LEDC_INTR_DISABLE,
                                   .gpio_num = gpio,
-                                  .duty = init_duty,
+                                  .duty = pwm->duty,
                                   .hpoint = 0};
   ledc_channel_config(&config);
 }
 
-void set_pwm_duty(struct pwm *pwm, uint16_t duty) {
+void set_pwm_duty_mils(struct pwm *pwm, uint16_t duty_mils) {
+  uint32_t duty = MILS_TO_DUTY(duty_mils);
+  if (duty == pwm->duty) {
+    return;
+  }
+  pwm->duty = duty;
   ledc_set_duty(LEDC_MODE, LEDC_CHANNEL, duty);
   ledc_update_duty(LEDC_MODE, LEDC_CHANNEL);
 }

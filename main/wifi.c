@@ -1,5 +1,6 @@
 #include "wifi.h"
 
+#include <assert.h>
 #include <stdint.h>
 
 #include "esp_log.h"
@@ -8,6 +9,7 @@
 #include "esp_wifi.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
+#include "nvs_flash.h"
 
 static const char tag[] = "wifi";
 
@@ -31,7 +33,7 @@ static const uint8_t broadcast_mac[ESP_NOW_ETH_ALEN] = {0xFF, 0xFF, 0xFF, 0xFF, 
 static struct wifi_state {
   uint8_t *data;
   uint16_t len;
-  void (*on_receive)(void *data);
+  void (*on_receive)(const void *data, uint16_t len);
   uint16_t repeat_count;
   SemaphoreHandle_t mutex;
   StaticSemaphore_t mutex_state[1];
@@ -41,10 +43,8 @@ static struct wifi_state {
 } wifi_state[1];
 
 static void wifi_send_callback(const esp_now_send_info_t *, esp_now_send_status_t status) {
-  ESP_LOGI(tag, "send=%s", status ? "err" : "ok");
+  ESP_ERROR_CHECK_WITHOUT_ABORT(status);
 }
-
-static void wifi_recv_callback(const esp_now_recv_info_t *info, const uint8_t *data, int len) {}
 
 #define PAYLOAD_HEADER_SIZE 20
 #pragma pack(push, 1)
@@ -55,10 +55,17 @@ struct wifi_payload {
 };
 #pragma pack(pop)
 
+static void wifi_recv_callback(const esp_now_recv_info_t *info, const uint8_t *data, int len) {
+  assert(PAYLOAD_HEADER_SIZE <= len && len <= UINT16_MAX);     // sanity check
+  struct wifi_payload *payload = (struct wifi_payload *)data;  // okay, as data is 32-bit aligned
+  ESP_LOGI(tag, "rec'd %ub (seq %u)", len, payload->sequence);
+  wifi_state->on_receive(payload->data, (uint16_t)len - PAYLOAD_HEADER_SIZE);
+}
+
 void send(uint8_t *data, uint16_t len) {
   struct wifi_payload payload[1];
   if (len == 0 || len > sizeof payload->data) {
-    ESP_LOGE(tag, "data too big=%u bytes", len);
+    ESP_LOGE(tag, "bad data size=%ub", len);
     return;
   }
   // TODO: Add signature logic.
@@ -69,6 +76,7 @@ void send(uint8_t *data, uint16_t len) {
   if (err != ESP_OK) {
     ESP_LOGE(tag, "on send - %s", esp_err_to_name(err));
   }
+  ESP_LOGI(tag, "sent %ub", len);
 }
 
 /** Sends the given message repeatedly. */
@@ -80,8 +88,8 @@ void send_repeated(uint8_t *data, uint16_t len, uint16_t count) {
   wifi_state->len = len;
   xSemaphoreGive(wifi_state->mutex);
   // End mutex
-  xTaskAbortDelay(wifi_state->repeat_task);  // Cancel vTaskDelay()
-  xTaskNotifyGive(wifi_state->repeat_task);  // Wake up.
+  xTaskAbortDelay(wifi_state->repeat_task);  // Cancel vTaskDelay(), if any.
+  xTaskNotify(wifi_state->repeat_task, 1, eSetValueWithoutOverwrite);  // Wake up!
 }
 
 /** The worker task for send_repeated(). */
@@ -92,7 +100,7 @@ static void repeat_task(void *parameters) {
     xSemaphoreTake(state->mutex, portMAX_DELAY);
     if (state->repeat_count == 0) {
       xSemaphoreGive(state->mutex);
-      ulTaskNotifyTake(pdTRUE, portMAX_DELAY);  // Wait for wakeup
+      ulTaskNotifyTake(pdTRUE, portMAX_DELAY);  // Wait forever for a wakeup.
       continue;
     }
     --state->repeat_count;
@@ -106,7 +114,13 @@ static void repeat_task(void *parameters) {
   }
 }
 
-void configure_wifi(void (*on_receive)(void *data)) {
+/**
+ * @brief Configures wifi as a singleton.
+ *
+ * Calls after the first do nothing except reset the on_receive handler.
+ */
+void configure_wifi(void (*on_receive)(const void *data, uint16_t len)) {
+  wifi_state->on_receive = on_receive;
   if (wifi_state->mutex) {
     return;
   }
@@ -116,10 +130,13 @@ void configure_wifi(void (*on_receive)(void *data)) {
                         wifi_state,  // parameters
                         5,           // priority
                         wifi_state->repeat_task_stack, wifi_state->repeat_task_state);
+
+  // Non-volatile storage
+  ESP_ERROR_CHECK(nvs_flash_init());
+
   // Wifi
   ESP_ERROR_CHECK(esp_netif_init());
   ESP_ERROR_CHECK(esp_event_loop_create_default());
-
   wifi_init_config_t cfg[1] = {WIFI_INIT_CONFIG_DEFAULT()};
   ESP_ERROR_CHECK(esp_wifi_init(cfg));
   ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM));

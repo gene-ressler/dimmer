@@ -6,14 +6,11 @@
 
 static const char tag[] = "level";
 
-/** Returns the input level clamped to valid range. */
+#define LEVEL_POLL_MS 3
+
+/** Sets the level of the given encoder, clamped to its valid range. */
 static inline void set_level(struct level_encoder *encoder, int32_t level) {
-  // clang-format off
-  encoder->level = 
-      level > encoder->level_max ? encoder->level_max
-    : level < encoder->level_min ? encoder->level_min 
-    : level;
-  // clang-format on
+  encoder->level = level < 0 ? 0 : level > encoder->level_max ? encoder->level_max : level;
 }
 
 /** Reads the level encoder state as a 2-bit quantity: 0 - CLK, 1 - DT. */
@@ -23,33 +20,30 @@ static inline int32_t read_level_encoder(struct level_encoder *encoder) {
   return (dt << 1) | clk;
 }
 
-#define B(N) (1ULL << (N))
-
-/** Initializes the level encoder. */
+/** @brief Initializes the level encoder. */
 void initialize_level_encoder(struct level_encoder *encoder, char *name, uint8_t sw_gpio,
-                              uint8_t clk_gpio, uint8_t dt_gpio, uint16_t level_min,
-                              uint16_t level_max, uint16_t level_init,
-                              void (*on_level_change)(struct level_encoder *),
-                              void (*on_sw_change)(struct level_encoder *), void *data) {
+                              uint8_t clk_gpio, uint8_t dt_gpio, uint16_t level_max,
+                              uint16_t level_init, void (*on_level_change)(struct level_encoder *),
+                              void (*on_sw_change)(struct level_encoder *)) {
   encoder->name = name;
   encoder->sw_gpio = sw_gpio;
   encoder->clk_gpio = clk_gpio;
   encoder->dt_gpio = dt_gpio;
-  encoder->level_min = level_min;
   encoder->level_max = level_max;
   encoder->on_level_change = on_level_change;
   encoder->on_sw_change = on_sw_change;
-  encoder->data = data;
   set_level(encoder, level_init);
   encoder->last_state = read_level_encoder(encoder);
   encoder->sw_value = gpio_get_level(encoder->sw_gpio);
   encoder->timer = NULL;
-  // TODO: Enable pull-ups for  ` ` real encoder.
+// TODO: Enable pull-ups for real encoder.
+#define B(N) (1ULL << (N))
   gpio_config_t config[1] = {{.pin_bit_mask = B(sw_gpio) | B(clk_gpio) | B(dt_gpio),
                               .mode = GPIO_MODE_INPUT,
                               .pull_up_en = GPIO_PULLUP_DISABLE,
                               .pull_down_en = GPIO_PULLDOWN_DISABLE,
                               .intr_type = GPIO_INTR_DISABLE}};
+#undef B
   gpio_config(config);
 }
 
@@ -83,11 +77,17 @@ static void level_encoder_sense_callback(TimerHandle_t timer) {
   }
 }
 
-#define LEVEL_POLL_MS 3
-
 void start_level_encoder_sense(struct level_encoder *encoder) {
-  ESP_LOGI(tag, "start sensing");
+  ESP_LOGI(tag, "start");
   encoder->timer = xTimerCreateStatic(encoder->name, pdMS_TO_TICKS(LEVEL_POLL_MS), pdTRUE, encoder,
                                       level_encoder_sense_callback, encoder->timer_state);
   xTimerStart(encoder->timer, 0);
+}
+
+void set_level_mils(struct level_encoder *encoder, uint16_t level) {
+  set_level(encoder, (uint32_t)level * encoder->level_max / 1024);
+}
+
+uint16_t get_level_mils(struct level_encoder *encoder) {
+  return (uint32_t)1024 * encoder->level / encoder->level_max;
 }
