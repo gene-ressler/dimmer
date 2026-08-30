@@ -9,7 +9,6 @@
 #define LEDC_PWM_FRAME_RATE 1000
 #define MILS_TO_DUTY(M) ((uint32_t)128 * (M) / 1024)
 
-/** Set up a singleton timer to drive all PWM outputs. */
 void initialize_pwm_timer(void) {
   ledc_timer_config_t timer = {.speed_mode = LEDC_MODE,
                                .timer_num = LEDC_TIMER,
@@ -19,7 +18,6 @@ void initialize_pwm_timer(void) {
   ledc_timer_config(&timer);
 }
 
-/** Initialize a GPIO pin as PWM connected to the singleton timer. */
 void initialize_pwm(struct pwm *pwm, char *name, gpio_num_t gpio, uint16_t init_duty_mils) {
   pwm->name = name;
   pwm->gpio = gpio;

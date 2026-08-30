@@ -6,13 +6,16 @@
 
 #include "driver/gpio.h"
 
-/** @brief  Data for a strap. */
+/** @brief Data for a strap. */
 struct strap {
   /** @brief Name of the strap for logging. */
   char *name;
   /** @brief Value of the strap at initialization time. */
   uint8_t value;
 };
+
+/** Returns true iff a ground strap existed for the GPIO pin given at initialization. */
+#define IS_STRAP_PRESENT(S) ((S)->value == 0)
 
 /**
  * @brief Initializes and polls the value of strap.

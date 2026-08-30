@@ -87,12 +87,9 @@ void send(void *data, uint16_t len) {
     ESP_LOGE(tag, "on send - %s", esp_err_to_name(err));
   }
   ESP_LOGI(tag, "sent %ub", len);
-  ESP_LOG_BUFFER_HEX_LEVEL(tag, data, len, ESP_LOG_INFO);
-  ESP_LOGI(tag, "payload");
-  ESP_LOG_BUFFER_HEX_LEVEL(tag, payload, PAYLOAD_HEADER_SIZE + len, ESP_LOG_INFO);
 }
 
-/** Sends the given message repeatedly. */
+/** @brief Sends the given message repeatedly. */
 void send_repeated(void *data, uint16_t len, uint16_t count) {
   // Start mutex
   xSemaphoreTake(wifi_state->mutex, portMAX_DELAY);
@@ -105,7 +102,7 @@ void send_repeated(void *data, uint16_t len, uint16_t count) {
   xTaskNotify(wifi_state->repeat_task, 1, eSetValueWithoutOverwrite);  // Wake up!
 }
 
-/** The worker task for send_repeated(). */
+/** @brief The worker task for send_repeated(). */
 static void repeat_task(void *parameters) {
   struct wifi_state *state = parameters;
   for (;;) {
