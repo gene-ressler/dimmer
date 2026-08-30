@@ -13,5 +13,5 @@ void initialize_strap(struct strap *strap, char *name, gpio_num_t gpio) {
                               .intr_type = GPIO_INTR_DISABLE}};
   gpio_config(config);
   strap->value = gpio_get_level(gpio);
-  ESP_LOGI(tag, "%s=%s", strap->name, strap->value ? "disabled" : "enabled");
+  ESP_LOGI(tag, "%s=%s", strap->name, strap->value ? "absent" : "present");
 }

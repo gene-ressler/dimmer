@@ -35,7 +35,6 @@ static void led_timer_callback(TimerHandle_t timer) {
   xTimerChangePeriod(timer, period, 0);
 }
 
-/** Sets the LED flash count and starts flashing. */
 void set_led_flash_count(struct led *led, uint8_t count) {
   uint16_t new_last_led_state = 2 * count;
   // Do nothing if no change.

@@ -1,37 +1,45 @@
 #pragma once
 
+/** @brief Rotary level encoders. */
+
 #include <stdint.h>
 
 #include "driver/gpio.h"
 #include "freertos/FreeRTOS.h"
 
-/** State of a level encoder. */
+/** @brief State of a level encoder. */
 struct level_encoder {
   /** Encoder name for logging. */
   char *name;
-  /** GPIO pins to poll for encoder state. */
+  /** GPIO input pins polled for encoder state. */
   uint8_t sw_gpio, clk_gpio, dt_gpio;
   /**
-   * Number of quadrature transitions to consider as "full on".
+   * @brief Number of quadrature transitions to consider as "full on".
    * The Elegoo EC11 encoder module produces about 80 per turn.
    */
   uint16_t level_max;
-  void (*on_level_change)(struct level_encoder *);
-  void (*on_sw_change)(struct level_encoder *);
-  void *data;
-  StaticTimer_t timer_state[1];
-  TimerHandle_t timer;
-  int32_t last_state;
-  /** Encoder level in 0..level_max. */
+  /** @brief Current encoder level in 0..level_max. */
   uint8_t level;
-  /** Push-button switch state. 1 when not pressed. 0 when pressed. */
+  /** @brief Push-button switch state. 1 when not pressed. 0 when pressed. */
   uint8_t sw_value;
+
+  // Private.
+  /** @brief Saved callback for encoder position changes. */
+  void (*on_level_change)(struct level_encoder *);
+  /** @brief Saved callback for pushbutton press/release. */
+  void (*on_sw_change)(struct level_encoder *);
+  /** @brief Blink timer. Internal. */
+  StaticTimer_t timer_state[1];
+  /** @brief Blink timer handle. */
+  TimerHandle_t timer;
+  /** @brief Two bits storing the last encoder quadrature value. */
+  int32_t last_state;
 };
 
 /**
  * @brief Initializes level encoder state.
  *
- * Note:
+ * Sets up GPIO input pins.
  *
  * @param encoder Encoder state to initialize.
  * @param name Name of the encoder.
@@ -55,7 +63,7 @@ void initialize_level_encoder(struct level_encoder *encoder, char *name, uint8_t
 void start_level_encoder_sense(struct level_encoder *encoder);
 
 /**
- * @brief Sets the encoder level using thousandths of its configured maximum.
+ * @brief Sets the encoder level using 1024ths of its configured maximum.
  *
  * @param encoder Encoder whose level should be changed.
  * @param level Level in the range 0..1024.
