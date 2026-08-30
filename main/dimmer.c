@@ -1,5 +1,5 @@
 /**
- * @brief 0-10 volt wireless dimmer.
+ * @brief 0-10 volt wireless dimmer app main.
  *
  * Design notes:
  *
@@ -29,8 +29,8 @@
 #define LEVEL_INIT 32
 #define STARTUP_SEND_REPEAT_COUNT 30
 #define STANDARD_SEND_REPEAT_COUNT 5
-#define IS_MODE_XMIT (straps[0].value)
-#define IS_MODE_RECV (!IS_MODE_XMIT)
+#define IS_MODE_XMIT (!IS_MODE_RECV)
+#define IS_MODE_RECV IS_STRAP_PRESENT(straps + 0)
 
 static const char tag[] = "dimmer";
 
@@ -53,19 +53,20 @@ static void send_level(struct level_encoder *encoder, uint16_t repeat_count) {
   send_repeated((uint8_t *)payload, sizeof *payload, repeat_count);
 }
 
-/** Handle user twist of the level encoder's knob. */
+/** Handles user twist of the level encoder's knob. */
 static void on_level_change(struct level_encoder *encoder) {
   set_led_flash_count(led, (7 + encoder->level) / 8);
   send_level(encoder, STANDARD_SEND_REPEAT_COUNT);
 }
 
-/** Handle user press/release of the encoder's momentary contact switch. */
+/** Handles user press/release of the encoder's momentary contact switch. */
 static void on_sw_change(struct level_encoder *encoder) {
   if (encoder->sw_value) {  // on release
     send_level(encoder, STANDARD_SEND_REPEAT_COUNT);
   }
 }
 
+/** Handles receipt of a payload. */
 static void on_receive(const void *data, uint16_t len) {
   if (len != sizeof(struct dimmer_payload)) {
     ESP_LOGE(tag, "payload len=len");
@@ -73,7 +74,7 @@ static void on_receive(const void *data, uint16_t len) {
   uint16_t level_mils = ((struct dimmer_payload *)data)->level_mils;
   ESP_LOGI(tag, "receive=%u", level_mils);
   if (IS_MODE_XMIT) {
-    // Sync level sent by a different transmitter.
+    // Sync to level sent by a different transmitter.
     set_level_mils(encoder, level_mils);
     return;
   }
