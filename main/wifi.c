@@ -10,6 +10,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
 #include "nvs_flash.h"
+#include "psa/crypto.h"
 
 static const char tag[] = "wifi";
 
@@ -28,18 +29,26 @@ static const uint8_t broadcast_mac[ESP_NOW_ETH_ALEN] = {0xFF, 0xFF, 0xFF, 0xFF, 
 #define SEND_INTERVAL_MS 2000
 #define TASK_STACK_SIZE 4096
 
-#define PAYLOAD_HEADER_SIZE 20
+#define PAYLOAD_HEADER_SIZE 22
 #define MAX_PAYLOAD_DATA_SIZE (ESP_NOW_MAX_DATA_LEN - PAYLOAD_HEADER_SIZE)
 #pragma pack(push, 1)
 struct wifi_payload {
+  // Start header
   uint32_t sequence;
-  uint8_t signature[16];
+  uint8_t hmac[16];
+  uint16_t data_len;
+  // End header
   uint8_t data[MAX_PAYLOAD_DATA_SIZE];
 };
 #pragma pack(pop)
 
 /** State of wifi connection. */
 static struct wifi_state {
+  bool is_broadcaster;
+
+  // Sequence number of last payload sent or received.
+  uint32_t sequence;
+
   // State of current repeated send.
   uint8_t data[MAX_PAYLOAD_DATA_SIZE];
   uint16_t len;
@@ -62,26 +71,74 @@ static void wifi_send_callback(const esp_now_send_info_t *, esp_now_send_status_
   ESP_ERROR_CHECK_WITHOUT_ABORT(status);
 }
 
+/** @brief Returns a 16-byte hmac based on given message sequence number and data. */
+static void get_hmac(uint8_t *hmac, uint32_t sequence, void *data, uint16_t len) {
+  static const uint8_t secret_key[16] __attribute__((nonstring)) = "My4secret2key#@!";
+  psa_hash_operation_t operation[1] = {{0}};
+
+  psa_status_t status = psa_hash_setup(operation, PSA_ALG_SHA_256);
+  if (status != PSA_SUCCESS) goto exit_no_abort;
+
+  status = psa_hash_update(operation, data, len);
+  if (status != PSA_SUCCESS) goto exit_with_abort;
+
+  status = psa_hash_update(operation, (const uint8_t *)&sequence, sizeof sequence);
+  if (status != PSA_SUCCESS) goto exit_with_abort;
+
+  status = psa_hash_update(operation, secret_key, sizeof secret_key);
+  if (status != PSA_SUCCESS) goto exit_with_abort;
+
+  size_t hash_len;
+  uint8_t hash[PSA_HASH_LENGTH(PSA_ALG_SHA_256)];
+  status = psa_hash_finish(operation, hash, sizeof hash, &hash_len);
+  if (status != PSA_SUCCESS) goto exit_with_abort;
+  memcpy(hmac, hash, 16);
+  return;
+
+exit_with_abort:
+  psa_hash_abort(operation);
+exit_no_abort:
+  ESP_LOGE(tag, "sha256 fail 0x%x", status);
+  // Last ditch will let the dimmer keep working if xmit and recv both fail.
+  memcpy(hmac, "0123456789abcdef", 16);
+}
+
 /** @brief Unwraps a received payload, verifies it, and invokes the user's callback. */
 static void wifi_recv_callback(const esp_now_recv_info_t *info, const uint8_t *data, int len) {
   assert(PAYLOAD_HEADER_SIZE <= len && len <= UINT16_MAX);     // sanity check
   struct wifi_payload *payload = (struct wifi_payload *)data;  // okay, as data is 32-bit aligned
-  // TODO: Add signature check.
+
+  // Manage sequence numbers.
+  if (wifi_state->is_broadcaster) {
+    // Quietly move the forward to catch up with some other broadcaster.
+    if (payload->sequence > wifi_state->sequence) wifi_state->sequence = payload->sequence;
+  } else if (payload->sequence <= wifi_state->sequence) {
+    // Reject retrograde at receiver (probable playback attack).
+    ESP_LOGE(tag, "rec'v reject seq@%u/%u", payload->sequence, wifi_state->sequence);
+    return;
+  }
+  // Reject hmac mismatch (probable spoofing).
+  uint8_t hmac[16];
+  get_hmac(hmac, payload->sequence, payload->data, payload->data_len);
+  if (memcmp(hmac, payload->hmac, sizeof payload->hmac) != 0) {
+    ESP_LOGE(tag, "rec'v reject hmac@%u", payload->sequence);
+    return;
+  }
+  // TODO: Add hmac check.
   ESP_LOGI(tag, "rec'd %ub (seq %u)", len, payload->sequence);
   wifi_state->on_receive(payload->data, (uint16_t)len - PAYLOAD_HEADER_SIZE);
 }
 
-/** @brief Wraps given data in a payload and broadcasts it. */
 void send(void *data, uint16_t len) {
   struct wifi_payload payload[1];
   if (len == 0 || len > sizeof payload->data) {
     ESP_LOGE(tag, "bad data size=%ub", len);
     return;
   }
-  // TODO: Add signature.
-  payload->sequence = 0x424242;
-  memcpy(payload->signature, "0123456789abcdef", sizeof payload->signature);
+  payload->sequence = ++wifi_state->sequence;
+  get_hmac(payload->hmac, payload->sequence, data, len);
   memcpy(payload->data, data, len);
+  payload->data_len = len;
   esp_err_t err = esp_now_send(broadcast_mac, (uint8_t *)payload, PAYLOAD_HEADER_SIZE + len);
   if (err != ESP_OK) {
     ESP_LOGE(tag, "on send - %s", esp_err_to_name(err));
@@ -89,7 +146,6 @@ void send(void *data, uint16_t len) {
   ESP_LOGI(tag, "sent %ub", len);
 }
 
-/** @brief Sends the given message repeatedly. */
 void send_repeated(void *data, uint16_t len, uint16_t count) {
   // Start mutex
   xSemaphoreTake(wifi_state->mutex, portMAX_DELAY);
@@ -128,11 +184,17 @@ static void repeat_task(void *parameters) {
 /**
  * @brief Configures wifi as a singleton.
  *
- * Calls after the first do nothing except reset the on_receive handler.
+ * Calls after the first do nothing to the wifi hardware.
  */
-void configure_wifi(void (*on_receive)(const void *data, uint16_t len)) {
+void initialize_wifi(bool is_broadcaster, void (*on_receive)(const void *data, uint16_t len)) {
+  // TODO: Restore state from nvs.
   wifi_state->on_receive = on_receive;
+  wifi_state->is_broadcaster = is_broadcaster;
   if (wifi_state->mutex) {
+    return;
+  }
+  if (psa_crypto_init() != PSA_SUCCESS) {
+    ESP_LOGE(tag, "PSA Crypto init fail");
     return;
   }
   wifi_state->mutex = xSemaphoreCreateMutexStatic(wifi_state->mutex_state);

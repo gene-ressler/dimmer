@@ -84,6 +84,7 @@ static void on_receive(const void *data, uint16_t len) {
 }
 
 void app_main(void) {
+  // Read GPIO pins serving as straps.
   initialize_strap(straps, "recv", RECV_STRAP_GPIO);
   ESP_LOGI(tag, "mode=%s", IS_MODE_XMIT ? "xmit" : "recv");
 
@@ -94,7 +95,7 @@ void app_main(void) {
   ESP_LOGI(tag, "mac=%s", buf);
 #endif
 
-  configure_wifi(on_receive);
+  initialize_wifi(IS_MODE_XMIT, on_receive);
 
   initialize_led(led, "on-board", ONBOARD_LED_GPIO);
 

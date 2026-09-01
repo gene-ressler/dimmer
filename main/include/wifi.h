@@ -12,10 +12,15 @@
  */
 void get_mac(uint8_t *mac, char *text);
 
-/** @brief Configures the ESP32's wifi stack for ESP-NOW broadcasts. */
-void configure_wifi(void (*on_receive)(const void *data, uint16_t len));
+/**
+ * @brief Configures the ESP32's wifi stack for ESP-NOW broadcasts.
+ *
+ * @param is_broadcaster whether wifi is broadcasting (and receiving) or just receiving
+ * @param on_receive
+ */
+void initialize_wifi(bool is_broadcaster, void (*on_receive)(const void *data, uint16_t len));
 
-/** @brief Sends a broadcast containing given data. */
+/** @brief Wraps given data in a payload and broadcasts it. */
 void send(void *data, uint16_t len);
 
 /**
