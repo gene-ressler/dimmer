@@ -11,6 +11,11 @@
 
 #define CHECKPOINT_TASK_STACK_SIZE 2048
 
+struct checkpoint {
+  uint32_t sequence;    // Broadcast sequence number.
+  uint16_t level_mils;  // Dimming level in [0..1024].
+};
+
 /** @brief State shared among threads and/or checkpointed to persistent store. */
 struct shared {
   /** Shared data */
@@ -18,10 +23,7 @@ struct shared {
   _Atomic uint16_t level_mils;  // Dimming level in [0..1024].
 
   /** The last data saved as a checkpoint. */
-  struct checkpoint {
-    uint32_t sequence;    // Broadcast sequence number.
-    uint16_t level_mils;  // Dimming level in [0..1024].
-  } checkpoint[1];
+  struct checkpoint checkpoint[1];
 
   // Non-volatile storage.
   nvs_handle_t nvs;

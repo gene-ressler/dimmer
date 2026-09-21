@@ -2,14 +2,14 @@
 
 #include "esp_log.h"
 
-static const char tag[] = "level";
+static const char tag[] = "encoder";
 
 #define LEVEL_POLL_MS 5
 
 /** @brief Converts raw level to mils with 32-bit signed arithmetic. */
-#define TO_LEVEL_MILS(L) (1024 * (int32_t)(L) / encoder->level_max)
+#define TO_LEVEL_MILS(E, L) (1024 * (int32_t)(L) / (E)->level_max)
 /** @brief Converts mils to a raw level with 32-bit signed arithmetic. */
-#define TO_RAW_LEVEL(M) (encoder->level_max * (int32_t)(M) / 1024)
+#define TO_RAW_LEVEL(E, M) ((E)->level_max * (int32_t)(M) / 1024)
 
 /** Reads the encoder device state as a 2-bit quantity: DT|CLK. */
 static inline int32_t read_level_encoder(struct level_encoder *encoder) {
@@ -25,7 +25,6 @@ void initialize_level_encoder(struct level_encoder *encoder, char *name, uint8_t
                               void (*on_level_change)(struct level_encoder *),
                               void (*on_sw_change)(struct level_encoder *)) {
   encoder->shared = shared;
-  encoder->level = TO_RAW_LEVEL(get_shared_level_mils(shared));
   encoder->name = name;
   encoder->sw_gpio = sw_gpio;
   encoder->clk_gpio = clk_gpio;
@@ -33,14 +32,17 @@ void initialize_level_encoder(struct level_encoder *encoder, char *name, uint8_t
   encoder->level_max = level_max;
   encoder->on_level_change = on_level_change;
   encoder->on_sw_change = on_sw_change;
+  encoder->timer = NULL;
+
   encoder->last_state = read_level_encoder(encoder);
   encoder->sw_value = gpio_get_level(encoder->sw_gpio);
-  encoder->timer = NULL;
-// TODO: Enable pull-ups for real encoder.
+  // encoder->level_max must be valid.
+  encoder->level = TO_RAW_LEVEL(encoder, get_shared_level_mils(shared));
+
 #define B(N) (1ULL << (N))
   gpio_config_t config[1] = {{.pin_bit_mask = B(sw_gpio) | B(clk_gpio) | B(dt_gpio),
                               .mode = GPIO_MODE_INPUT,
-                              .pull_up_en = GPIO_PULLUP_DISABLE,
+                              .pull_up_en = GPIO_PULLUP_ENABLE,
                               .pull_down_en = GPIO_PULLDOWN_DISABLE,
                               .intr_type = GPIO_INTR_DISABLE}};
 #undef B
@@ -50,7 +52,7 @@ void initialize_level_encoder(struct level_encoder *encoder, char *name, uint8_t
 void set_level_mils(struct level_encoder *encoder, uint16_t level_mils) {
   set_shared_level_mils(encoder->shared, level_mils);
   // A racing thread might overwrite the setting above. Use the final value.
-  encoder->level = TO_RAW_LEVEL(get_shared_level_mils(encoder->shared));
+  encoder->level = TO_RAW_LEVEL(encoder, get_shared_level_mils(encoder->shared));
 }
 
 /** Table mapping last two states to increment implied by quadrature. */
@@ -76,7 +78,7 @@ static void level_encoder_sense_callback(TimerHandle_t timer) {
     uint16_t old_level = encoder->level;
     int32_t state_pair = ((encoder->last_state << 2) | state) & 0xf;
     int32_t new_level = old_level + increment_by_state_pair[state_pair];
-    if (set_shared_level_mils(encoder->shared, TO_LEVEL_MILS(new_level))) {
+    if (set_shared_level_mils(encoder->shared, TO_LEVEL_MILS(encoder, new_level))) {
       encoder->level = new_level;
       encoder->on_level_change(encoder);
     }

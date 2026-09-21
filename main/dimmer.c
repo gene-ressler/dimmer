@@ -49,7 +49,7 @@ struct dimmer_payload {
 /** @brief Broadcast the encoder's current level, repeatedly for reliability. */
 static void send_level(struct level_encoder *encoder, uint16_t repeat_count) {
   uint16_t level_mils = get_level_mils(encoder);
-  ESP_LOGI(tag, "send=%u@%u", level_mils, repeat_count);
+  ESP_LOGI(tag, "send=%ux%u", level_mils, repeat_count);
   struct dimmer_payload payload[1] = {{.level_mils = level_mils}};
   send_repeated((uint8_t *)payload, sizeof *payload, repeat_count);
   checkpoint(shared);
@@ -57,7 +57,7 @@ static void send_level(struct level_encoder *encoder, uint16_t repeat_count) {
 
 /** Handles user twist of the level encoder's knob. */
 static void on_level_change(struct level_encoder *encoder) {
-  set_led_flash_count(led, (127 + get_level_mils(encoder)) / 128);
+  set_led_flash_count(led, MILS_TO_FLASH_COUNT(get_level_mils(encoder)));
   send_level(encoder, STANDARD_SEND_REPEAT_COUNT);
 }
 
@@ -115,7 +115,9 @@ void app_main(void) {
     send_level(encoder, STARTUP_SEND_REPEAT_COUNT);
   } else {
     initialize_pwm_timer();
-    initialize_pwm(pwm, "ctrl", CTRL_OUT_GPIO, get_shared_level_mils(shared));
+    uint16_t level_mils = get_shared_level_mils(shared);
+    initialize_pwm(pwm, "ctrl", CTRL_OUT_GPIO, level_mils);
+    set_led_flash_count(led, MILS_TO_FLASH_COUNT(level_mils));
   }
 
   for (;;) {

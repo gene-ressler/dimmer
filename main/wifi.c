@@ -110,7 +110,11 @@ static void wifi_recv_callback(const esp_now_recv_info_t *info, const uint8_t *d
 
   // Manage sequence numbers.
   uint32_t state_sequence = get_shared_sequence(wifi_state->shared);
-  if (payload->sequence <= state_sequence) {
+  if (payload->sequence == state_sequence) {
+    ESP_LOGI(tag, "rec'v ignore seq@%u", state_sequence);
+    return;
+  }
+  if (payload->sequence < state_sequence) {
     // Reject retrograde sequence in received payload. Probable playback attack.
     ESP_LOGE(tag, "rec'v reject seq@%u/%u", payload->sequence, state_sequence);
     return;
