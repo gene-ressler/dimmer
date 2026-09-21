@@ -2,6 +2,7 @@
 
 /** @brief PWM outputs. */
 
+#include <stdatomic.h>
 #include <stdint.h>
 
 #include "driver/gpio.h"
@@ -14,7 +15,7 @@ struct pwm {
   /** @brief GPIO pin for PWM output. */
   gpio_num_t gpio;
   /** @brief Raw internal duty cycle. */
-  uint16_t duty;
+  _Atomic uint16_t duty;
 };
 
 /** @brief Initializes the timer needed for all PWMs. */
@@ -39,3 +40,6 @@ void initialize_pwm(struct pwm *pwm, char *name, gpio_num_t gpio, uint16_t init_
  * @param duty_mils new duty cycle in 1024ths
  */
 void set_pwm_duty_mils(struct pwm *pwm, uint16_t duty_mils);
+
+/** Returns the current duty cycle of the PWM in 1024ths. */
+uint16_t get_pwm_duty_mils(struct pwm *pwm);

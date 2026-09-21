@@ -1,19 +1,17 @@
-#include "level.h"
-
-#include <stdint.h>
+#include "encoder.h"
 
 #include "esp_log.h"
 
 static const char tag[] = "level";
 
-#define LEVEL_POLL_MS 3
+#define LEVEL_POLL_MS 5
 
-/** Sets the level of the given encoder, clamped to its valid range. */
-static inline void set_level(struct level_encoder *encoder, int32_t level) {
-  encoder->level = level < 0 ? 0 : level > encoder->level_max ? encoder->level_max : level;
-}
+/** @brief Converts raw level to mils with 32-bit signed arithmetic. */
+#define TO_LEVEL_MILS(L) (1024 * (int32_t)(L) / encoder->level_max)
+/** @brief Converts mils to a raw level with 32-bit signed arithmetic. */
+#define TO_RAW_LEVEL(M) (encoder->level_max * (int32_t)(M) / 1024)
 
-/** Reads the level encoder state as a 2-bit quantity: 0 - CLK, 1 - DT. */
+/** Reads the encoder device state as a 2-bit quantity: DT|CLK. */
 static inline int32_t read_level_encoder(struct level_encoder *encoder) {
   int32_t clk = gpio_get_level(encoder->clk_gpio);
   int32_t dt = gpio_get_level(encoder->dt_gpio);
@@ -23,8 +21,11 @@ static inline int32_t read_level_encoder(struct level_encoder *encoder) {
 /** @brief Initializes the level encoder. */
 void initialize_level_encoder(struct level_encoder *encoder, char *name, uint8_t sw_gpio,
                               uint8_t clk_gpio, uint8_t dt_gpio, uint16_t level_max,
-                              uint16_t level_init, void (*on_level_change)(struct level_encoder *),
+                              struct shared *shared,
+                              void (*on_level_change)(struct level_encoder *),
                               void (*on_sw_change)(struct level_encoder *)) {
+  encoder->shared = shared;
+  encoder->level = TO_RAW_LEVEL(get_shared_level_mils(shared));
   encoder->name = name;
   encoder->sw_gpio = sw_gpio;
   encoder->clk_gpio = clk_gpio;
@@ -32,7 +33,6 @@ void initialize_level_encoder(struct level_encoder *encoder, char *name, uint8_t
   encoder->level_max = level_max;
   encoder->on_level_change = on_level_change;
   encoder->on_sw_change = on_sw_change;
-  set_level(encoder, level_init);
   encoder->last_state = read_level_encoder(encoder);
   encoder->sw_value = gpio_get_level(encoder->sw_gpio);
   encoder->timer = NULL;
@@ -45,6 +45,12 @@ void initialize_level_encoder(struct level_encoder *encoder, char *name, uint8_t
                               .intr_type = GPIO_INTR_DISABLE}};
 #undef B
   gpio_config(config);
+}
+
+void set_level_mils(struct level_encoder *encoder, uint16_t level_mils) {
+  set_shared_level_mils(encoder->shared, level_mils);
+  // A racing thread might overwrite the setting above. Use the final value.
+  encoder->level = TO_RAW_LEVEL(get_shared_level_mils(encoder->shared));
 }
 
 /** Table mapping last two states to increment implied by quadrature. */
@@ -67,13 +73,14 @@ static void level_encoder_sense_callback(TimerHandle_t timer) {
   }
   int32_t state = read_level_encoder(encoder);
   if (state != encoder->last_state) {
+    uint16_t old_level = encoder->level;
     int32_t state_pair = ((encoder->last_state << 2) | state) & 0xf;
-    uint8_t old_level = encoder->level;
-    set_level(encoder, (int32_t)encoder->level + increment_by_state_pair[state_pair]);
-    encoder->last_state = state;
-    if (encoder->on_level_change && encoder->level != old_level) {
+    int32_t new_level = old_level + increment_by_state_pair[state_pair];
+    if (set_shared_level_mils(encoder->shared, TO_LEVEL_MILS(new_level))) {
+      encoder->level = new_level;
       encoder->on_level_change(encoder);
     }
+    encoder->last_state = state;
   }
 }
 
@@ -82,12 +89,4 @@ void start_level_encoder_sense(struct level_encoder *encoder) {
   encoder->timer = xTimerCreateStatic(encoder->name, pdMS_TO_TICKS(LEVEL_POLL_MS), pdTRUE, encoder,
                                       level_encoder_sense_callback, encoder->timer_state);
   xTimerStart(encoder->timer, 0);
-}
-
-void set_level_mils(struct level_encoder *encoder, uint16_t level) {
-  set_level(encoder, (uint32_t)level * encoder->level_max / 1024);
-}
-
-uint16_t get_level_mils(struct level_encoder *encoder) {
-  return (uint32_t)1024 * encoder->level / encoder->level_max;
 }

@@ -4,6 +4,8 @@
 
 #include <stdint.h>
 
+#include "shared.h"
+
 /**
  * @brief Returns the device's MAC address as hex digits and text.
  *
@@ -15,16 +17,13 @@ void get_mac(uint8_t *mac, char *text);
 /**
  * @brief Configures the ESP32's wifi stack for ESP-NOW broadcasts.
  *
- * @param is_broadcaster whether wifi is broadcasting (and receiving) or just receiving
- * @param on_receive
+ * @param shared shared, checkpointed state variables containing broadcast sequence numbers
+ * @param on_receive callback for valid broadcasts
  */
-void initialize_wifi(bool is_broadcaster, void (*on_receive)(const void *data, uint16_t len));
-
-/** @brief Wraps given data in a payload and broadcasts it. */
-void send(void *data, uint16_t len);
+void initialize_wifi(struct shared *shared, void (*on_receive)(const void *data, uint16_t len));
 
 /**
- * @brief Same as `send()`, but repeats the broadcast a given number of times.
+ * @brief Wraps given data in a payload and broadcasts it repeatedly.
  *
  * Returns immediately; repeats continue asynchronously. Causes any previous
  * repeats still in progress to be aborted before starting the new sequence.

@@ -48,13 +48,16 @@ void initialize_led(struct led *led, char *name, gpio_num_t gpio);
 /**
  * @brief Sets LED flash count.
  *
- * Halts any flashing in progress and starts a new sequence.
- * Count of zero turns off the LED completely.
+ * Thread safe. Halts any flashing in progress and starts a new sequence. Count of zero turns off
+ * the LED completely.
  *
  * @param led initialized data for flashing LED
  * @param count number of times to flash between pauses
  */
 void set_led_flash_count(struct led *led, uint8_t count);
+
+/** Converts a value in 0..1024 to an indicative number of flashes. */
+#define MILS_TO_FLASH_COUNT(M) ((64 + (M)) / 128)
 
 /** @brief GPIO pin number of the on-board LED. */
 #define ONBOARD_LED_GPIO GPIO_NUM_2

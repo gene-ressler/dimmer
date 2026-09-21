@@ -7,7 +7,8 @@
 #define LEDC_CHANNEL LEDC_CHANNEL_0
 #define LEDC_DUTY_RES LEDC_TIMER_7_BIT
 #define LEDC_PWM_FRAME_RATE 1000
-#define MILS_TO_DUTY(M) ((uint32_t)128 * (M) / 1024)
+#define MILS_TO_DUTY(M) ((M) / 8)
+#define DUTY_TO_MILS(D) ((D) * 8)
 
 void initialize_pwm_timer(void) {
   ledc_timer_config_t timer = {.speed_mode = LEDC_MODE,
@@ -33,11 +34,14 @@ void initialize_pwm(struct pwm *pwm, char *name, gpio_num_t gpio, uint16_t init_
 }
 
 void set_pwm_duty_mils(struct pwm *pwm, uint16_t duty_mils) {
-  uint32_t duty = MILS_TO_DUTY(duty_mils);
-  if (duty == pwm->duty) {
+  uint16_t old_duty = atomic_load(&pwm->duty);
+  uint16_t new_duty = MILS_TO_DUTY(duty_mils);
+  if (new_duty == old_duty) {
     return;
   }
-  pwm->duty = duty;
-  ledc_set_duty(LEDC_MODE, LEDC_CHANNEL, duty);
+  atomic_store(&pwm->duty, new_duty);
+  ledc_set_duty(LEDC_MODE, LEDC_CHANNEL, new_duty);
   ledc_update_duty(LEDC_MODE, LEDC_CHANNEL);
 }
+
+uint16_t get_pwm_duty_mils(struct pwm *pwm) { return DUTY_TO_MILS(atomic_load(&pwm->duty)); }

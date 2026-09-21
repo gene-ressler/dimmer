@@ -1,6 +1,7 @@
 #include "wifi.h"
 
 #include <assert.h>
+#include <stdatomic.h>
 #include <stdint.h>
 
 #include "esp_log.h"
@@ -9,8 +10,8 @@
 #include "esp_wifi.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
-#include "nvs_flash.h"
 #include "psa/crypto.h"
+#include "shared.h"
 
 static const char tag[] = "wifi";
 
@@ -27,7 +28,7 @@ static const uint8_t broadcast_mac[ESP_NOW_ETH_ALEN] = {0xFF, 0xFF, 0xFF, 0xFF, 
 
 #define WIFI_CHANNEL 3
 #define SEND_INTERVAL_MS 2000
-#define TASK_STACK_SIZE 4096
+#define WIFI_TASK_STACK_SIZE 4096
 
 #define PAYLOAD_HEADER_SIZE 22
 #define MAX_PAYLOAD_DATA_SIZE (ESP_NOW_MAX_DATA_LEN - PAYLOAD_HEADER_SIZE)
@@ -44,12 +45,8 @@ struct wifi_payload {
 
 /** State of wifi connection. */
 static struct wifi_state {
-  bool is_broadcaster;
-
-  // Sequence number of last payload sent or received.
-  uint32_t sequence;
-
   // State of current repeated send.
+  uint32_t sequence;
   uint8_t data[MAX_PAYLOAD_DATA_SIZE];
   uint16_t len;
   uint16_t repeat_count;
@@ -61,7 +58,10 @@ static struct wifi_state {
   // Task to run the repeat lock.
   TaskHandle_t repeat_task;
   StaticTask_t repeat_task_state[1];
-  StackType_t repeat_task_stack[TASK_STACK_SIZE];
+  StackType_t repeat_task_stack[WIFI_TASK_STACK_SIZE];
+
+  /** @brief Shared atomic variables. Contains sequence. */
+  struct shared *shared;
 
   // Callback for handling received data.
   void (*on_receive)(const void *data, uint16_t len);
@@ -109,41 +109,40 @@ static void wifi_recv_callback(const esp_now_recv_info_t *info, const uint8_t *d
   struct wifi_payload *payload = (struct wifi_payload *)data;  // okay, as data is 32-bit aligned
 
   // Manage sequence numbers.
-  if (wifi_state->is_broadcaster) {
-    // Quietly move the forward to catch up with some other broadcaster.
-    if (payload->sequence > wifi_state->sequence) wifi_state->sequence = payload->sequence;
-  } else if (payload->sequence <= wifi_state->sequence) {
-    // Reject retrograde at receiver (probable playback attack).
-    ESP_LOGE(tag, "rec'v reject seq@%u/%u", payload->sequence, wifi_state->sequence);
+  uint32_t state_sequence = get_shared_sequence(wifi_state->shared);
+  if (payload->sequence <= state_sequence) {
+    // Reject retrograde sequence in received payload. Probable playback attack.
+    ESP_LOGE(tag, "rec'v reject seq@%u/%u", payload->sequence, state_sequence);
     return;
   }
-  // Reject hmac mismatch (probable spoofing).
+  advance_shared_sequence(wifi_state->shared, state_sequence, payload->sequence);
+  // Reject hmac mismatch. Probable spoofing.
   uint8_t hmac[16];
   get_hmac(hmac, payload->sequence, payload->data, payload->data_len);
   if (memcmp(hmac, payload->hmac, sizeof payload->hmac) != 0) {
     ESP_LOGE(tag, "rec'v reject hmac@%u", payload->sequence);
     return;
   }
-  // TODO: Add hmac check.
   ESP_LOGI(tag, "rec'd %ub (seq %u)", len, payload->sequence);
   wifi_state->on_receive(payload->data, (uint16_t)len - PAYLOAD_HEADER_SIZE);
 }
 
-void send(void *data, uint16_t len) {
+static void send(void *data, uint16_t len, uint32_t sequence) {
   struct wifi_payload payload[1];
   if (len == 0 || len > sizeof payload->data) {
     ESP_LOGE(tag, "bad data size=%ub", len);
     return;
   }
-  payload->sequence = ++wifi_state->sequence;
-  get_hmac(payload->hmac, payload->sequence, data, len);
+  payload->sequence = sequence;
+  get_hmac(payload->hmac, sequence, data, len);
   memcpy(payload->data, data, len);
   payload->data_len = len;
   esp_err_t err = esp_now_send(broadcast_mac, (uint8_t *)payload, PAYLOAD_HEADER_SIZE + len);
-  if (err != ESP_OK) {
+  if (err == ESP_OK) {
+    ESP_LOGI(tag, "sent %ub", len);
+  } else {
     ESP_LOGE(tag, "on send - %s", esp_err_to_name(err));
   }
-  ESP_LOGI(tag, "sent %ub", len);
 }
 
 void send_repeated(void *data, uint16_t len, uint16_t count) {
@@ -152,31 +151,36 @@ void send_repeated(void *data, uint16_t len, uint16_t count) {
   wifi_state->repeat_count = count;
   memcpy(wifi_state->data, data, len);
   wifi_state->len = len;
+  wifi_state->sequence = increment_shared_sequence(wifi_state->shared);
   xSemaphoreGive(wifi_state->mutex);
   // End mutex
+
   xTaskAbortDelay(wifi_state->repeat_task);  // Cancel vTaskDelay(), if any.
   xTaskNotify(wifi_state->repeat_task, 1, eSetValueWithoutOverwrite);  // Wake up!
 }
 
 /** @brief The worker task for send_repeated(). */
 static void repeat_task(void *parameters) {
-  struct wifi_state *state = parameters;
+  struct wifi_state *wifi_state = parameters;
   for (;;) {
     // Start mutex
-    xSemaphoreTake(state->mutex, portMAX_DELAY);
-    if (state->repeat_count == 0) {
-      xSemaphoreGive(state->mutex);
+    xSemaphoreTake(wifi_state->mutex, portMAX_DELAY);
+    if (wifi_state->repeat_count == 0) {
+      // End mutex
+      xSemaphoreGive(wifi_state->mutex);
       ulTaskNotifyTake(pdTRUE, portMAX_DELAY);  // Wait forever for a wakeup.
       continue;
     }
-    --state->repeat_count;
+    --wifi_state->repeat_count;
     // Copy data for sending outside mutex.
-    uint16_t len = state->len;
-    uint8_t data[state->len];
-    memcpy(data, state->data, state->len);
-    xSemaphoreGive(state->mutex);
+    uint16_t len = wifi_state->len;
+    uint8_t data[wifi_state->len];
+    memcpy(data, wifi_state->data, wifi_state->len);
+    uint32_t sequence = wifi_state->sequence;
+    xSemaphoreGive(wifi_state->mutex);
     // End mutex
-    send(data, len);
+
+    send(data, len, sequence);
     vTaskDelay(SEND_INTERVAL_MS / portTICK_PERIOD_MS);  // Abortable by send_repeated()
   }
 }
@@ -186,10 +190,10 @@ static void repeat_task(void *parameters) {
  *
  * Calls after the first do nothing to the wifi hardware.
  */
-void initialize_wifi(bool is_broadcaster, void (*on_receive)(const void *data, uint16_t len)) {
-  // TODO: Restore state from nvs.
+void initialize_wifi(struct shared *shared, void (*on_receive)(const void *data, uint16_t len)) {
+  // Non-threadsafe assignments are okay here.
+  wifi_state->shared = shared;
   wifi_state->on_receive = on_receive;
-  wifi_state->is_broadcaster = is_broadcaster;
   if (wifi_state->mutex) {
     return;
   }
@@ -197,15 +201,13 @@ void initialize_wifi(bool is_broadcaster, void (*on_receive)(const void *data, u
     ESP_LOGE(tag, "PSA Crypto init fail");
     return;
   }
+  // Begin threadsafe operations required.
   wifi_state->mutex = xSemaphoreCreateMutexStatic(wifi_state->mutex_state);
-  wifi_state->repeat_task =
-      xTaskCreateStatic(repeat_task, "wifi_repeat", TASK_STACK_SIZE,
-                        wifi_state,  // parameters
-                        5,           // priority
-                        wifi_state->repeat_task_stack, wifi_state->repeat_task_state);
-
-  // Non-volatile storage
-  ESP_ERROR_CHECK(nvs_flash_init());
+  wifi_state->repeat_task = xTaskCreateStaticPinnedToCore(
+      repeat_task, "wifi_repeat", WIFI_TASK_STACK_SIZE,
+      wifi_state,  // parameters
+      5,           // priority
+      wifi_state->repeat_task_stack, wifi_state->repeat_task_state, 1);
 
   // Wifi
   ESP_ERROR_CHECK(esp_netif_init());
