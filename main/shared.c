@@ -19,7 +19,7 @@ static void save_checkpoint(struct shared *shared, struct checkpoint *checkpoint
     ESP_LOGE(tag, "chkpt fail: seq=%u, lvl=%u", checkpoint->sequence, checkpoint->level_mils);
     return;
   }
-  ESP_LOGD(tag, "chkpt: seq=%u, lvl=%u", checkpoint->sequence, checkpoint->level_mils);
+  ESP_LOGI(tag, "chkpt: seq=%u, lvl=%u", checkpoint->sequence, checkpoint->level_mils);
   *shared->checkpoint = *checkpoint;
 }
 
