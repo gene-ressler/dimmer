@@ -87,7 +87,7 @@ static void level_encoder_sense_callback(TimerHandle_t timer) {
 }
 
 void start_level_encoder_sense(struct level_encoder *encoder) {
-  ESP_LOGI(tag, "start");
+  ESP_LOGI(tag, "start sense");
   encoder->timer = xTimerCreateStatic(encoder->name, pdMS_TO_TICKS(LEVEL_POLL_MS), pdTRUE, encoder,
                                       level_encoder_sense_callback, encoder->timer_state);
   xTimerStart(encoder->timer, 0);

@@ -49,7 +49,7 @@ struct dimmer_payload {
 /** @brief Broadcast the encoder's current level, repeatedly for reliability. */
 static void send_level(struct level_encoder *encoder, uint16_t repeat_count) {
   uint16_t level_mils = get_level_mils(encoder);
-  ESP_LOGI(tag, "send=%ux%u", level_mils, repeat_count);
+  ESP_LOGD(tag, "send=%ux%u", level_mils, repeat_count);
   struct dimmer_payload payload[1] = {{.level_mils = level_mils}};
   send_repeated((uint8_t *)payload, sizeof *payload, repeat_count);
   checkpoint(shared);
@@ -74,7 +74,7 @@ static void on_receive(const void *data, uint16_t len) {
     ESP_LOGE(tag, "payload len=len");
   }
   uint16_t level_mils = ((struct dimmer_payload *)data)->level_mils;
-  ESP_LOGI(tag, "receive=%u", level_mils);
+  ESP_LOGD(tag, "receive=%u", level_mils);
   if (IS_MODE_XMIT) {
     // Sync encoder to level sent by a different transmitter.
     set_level_mils(encoder, level_mils);

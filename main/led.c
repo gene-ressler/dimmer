@@ -42,7 +42,7 @@ void set_led_flash_count(struct led *led, uint8_t count) {
     return;
   }
   // Else we're starting fresh.
-  ESP_LOGI(tag, "%s=%d", led->name, count);
+  ESP_LOGD(tag, "%s=%d", led->name, count);
   gpio_set_level(led->gpio, 0);
   led->led_state = 0;
   led->last_led_state = new_last_led_state;

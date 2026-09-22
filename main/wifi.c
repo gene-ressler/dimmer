@@ -111,7 +111,7 @@ static void wifi_recv_callback(const esp_now_recv_info_t *info, const uint8_t *d
   // Manage sequence numbers.
   uint32_t state_sequence = get_shared_sequence(wifi_state->shared);
   if (payload->sequence == state_sequence) {
-    ESP_LOGI(tag, "rec'v ignore seq@%u", state_sequence);
+    ESP_LOGD(tag, "rec'v ignore seq@%u", state_sequence);
     return;
   }
   if (payload->sequence < state_sequence) {
@@ -127,7 +127,7 @@ static void wifi_recv_callback(const esp_now_recv_info_t *info, const uint8_t *d
     ESP_LOGE(tag, "rec'v reject hmac@%u", payload->sequence);
     return;
   }
-  ESP_LOGI(tag, "rec'd %ub (seq %u)", len, payload->sequence);
+  ESP_LOGD(tag, "rec'd %ub (seq %u)", len, payload->sequence);
   wifi_state->on_receive(payload->data, (uint16_t)len - PAYLOAD_HEADER_SIZE);
 }
 
@@ -143,7 +143,7 @@ static void send(void *data, uint16_t len, uint32_t sequence) {
   payload->data_len = len;
   esp_err_t err = esp_now_send(broadcast_mac, (uint8_t *)payload, PAYLOAD_HEADER_SIZE + len);
   if (err == ESP_OK) {
-    ESP_LOGI(tag, "sent %ub", len);
+    ESP_LOGD(tag, "sent %ub", len);
   } else {
     ESP_LOGE(tag, "on send - %s", esp_err_to_name(err));
   }
