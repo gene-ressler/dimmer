@@ -39,9 +39,7 @@ void set_pwm_duty_mils(struct pwm *pwm, uint16_t duty_mils) {
   if (new_duty == old_duty) {
     return;
   }
-  atomic_store(&pwm->duty, new_duty);
+  pwm->duty = new_duty;
   ledc_set_duty(LEDC_MODE, LEDC_CHANNEL, new_duty);
   ledc_update_duty(LEDC_MODE, LEDC_CHANNEL);
 }
-
-uint16_t get_pwm_duty_mils(struct pwm *pwm) { return DUTY_TO_MILS(atomic_load(&pwm->duty)); }
