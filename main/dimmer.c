@@ -71,7 +71,7 @@ static void on_sw_change(struct level_encoder *encoder) {
 /** Handles receipt of a payload. */
 static void on_receive(const void *data, uint16_t len) {
   if (len != sizeof(struct dimmer_payload)) {
-    ESP_LOGE(tag, "payload len=len");
+    ESP_LOGE(tag, "payload len %u!=%u", len, sizeof(struct dimmer_payload));
   }
   uint16_t level_mils = ((struct dimmer_payload *)data)->level_mils;
   ESP_LOGI(tag, "receive=%u", level_mils);
