@@ -1,18 +1,5 @@
-/**
- * @brief 0-10 volt wireless dimmer app main.
- *
- * Design notes:
- *
- * One ESP-32 serves as master control and transmitter. An arbitrary number of other
- * EPS-32s are at each light. Each receiver generates its own 0-10 volt dimming
- * control signal. Intended lights are HYPERLITE High Bay 150W. Their 0-10 volt
- * control input is normally pushed to a floating differential 15v. The control signal
- * source therefore is a sink rather than a source. Observed sink current is 0.1ma. This
- * firmware generates a 3.3 volt PWM output with 0-100% duty cycle. We use the GPIO
- * to drive a lo-pass filter and 3x op-amp stage (12-volt supply) for nominal 0-10v.
- * The LM358P can sinks 5ma at all temps. A buck converter 12 -> 3.3v powers the
- * receiver ESP-32s. The transmitter needs only 3.3v or 5v e.g. from USB.
- */
+/** @brief 0-10 volt wireless dimmer app main. */
+
 #include "encoder.h"
 #include "esp_log.h"
 #include "led.h"
@@ -22,13 +9,13 @@
 #include "wifi.h"
 
 #define RECV_STRAP_GPIO 19
-#define LEVEL_SW_GPIO 21
-#define LEVEL_CLK_GPIO 22
-#define LEVEL_DT_GPIO 23
-#define CTRL_OUT_GPIO 25  // PWM
-#define LEVEL_MAX 64
-#define STARTUP_SEND_REPEAT_COUNT 30
-#define STANDARD_SEND_REPEAT_COUNT 5
+#define LEVEL_SW_GPIO 21              // Rotary encoder push switch
+#define LEVEL_CLK_GPIO 22             // Rotary encoder quadrature signal
+#define LEVEL_DT_GPIO 23              // Rotary encoder quadrature signal
+#define CTRL_OUT_GPIO 25              // PWM output
+#define LEVEL_MAX 64                  // Rotary quadrature transitions for 0-10 volts
+#define STARTUP_SEND_REPEAT_COUNT 15  // Number of broadcast repeats on power up
+#define STANDARD_SEND_REPEAT_COUNT 5  // Number of broadcast repeats on level change
 #define IS_MODE_XMIT (!IS_MODE_RECV)
 #define IS_MODE_RECV IS_STRAP_PRESENT(straps + 0)
 
