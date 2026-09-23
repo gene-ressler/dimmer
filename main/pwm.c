@@ -34,7 +34,7 @@ void initialize_pwm(struct pwm *pwm, char *name, gpio_num_t gpio, uint16_t init_
 }
 
 void set_pwm_duty_mils(struct pwm *pwm, uint16_t duty_mils) {
-  uint16_t old_duty = atomic_load(&pwm->duty);
+  uint16_t old_duty = pwm->duty;
   uint16_t new_duty = MILS_TO_DUTY(duty_mils);
   if (new_duty == old_duty) {
     return;
