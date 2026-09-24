@@ -1,4 +1,4 @@
-# 0-10 volt wireless light dimmer
+# Wireless 0-10 volt light dimmer
 
 ## Background
 

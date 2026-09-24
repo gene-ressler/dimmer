@@ -1,4 +1,4 @@
-\mainpage Wireless 0-10 volt dimmer
+\mainpage Wireless 0-10 volt lignt dimmer
 
 # Design and implementation notes
 
@@ -9,7 +9,7 @@ second approach.
 
 It is my first ESP32 project. All feedback is very welcome. Be kind.
 
-## Design goals
+## Goals
 
 - Retain existing on/off switches. No mains power switching by the dimmer.
   - Avoids safety considerations and complexity.
@@ -20,7 +20,7 @@ It is my first ESP32 project. All feedback is very welcome. Be kind.
 - Secure: Reasonably proof against playback and spoofing attacks.
 - Power interruption resilience: doesn't lose dimming level and keeps working.
 
-## Design approach
+## Approach
 
 - ESP32-WROOM dev board for each tx and rx.
 - ESP-IDF environment because several threads will be needed.
