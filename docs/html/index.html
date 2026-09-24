@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Wireless 0-10 Volt Dimmer: Wireless 0-10 volt dimmer</title>
+<title>Wireless 0-10 Volt Dimmer: Wireless 0-10 volt lignt dimmer</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,7 +70,7 @@ $(function() {
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">Wireless 0-10 volt dimmer </div></div>
+  <div class="headertitle"><div class="title">Wireless 0-10 volt lignt dimmer </div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><h1><a class="anchor" id="autotoc_md0"></a>
@@ -78,7 +78,7 @@ Design and implementation notes</h1>
 <p>This design is for the case of 0-10 volt dimmable fixtures controlled by multiple switches replacing old fixtures that either weren't dimmable or used mains dimming, e.g. standard triac-based devices. Therefore either new 0-10 volt wiring or a wireless solution is needed. This project is about the second approach.</p>
 <p>It is my first ESP32 project. All feedback is very welcome. Be kind.</p>
 <h2><a class="anchor" id="autotoc_md1"></a>
-Design goals</h2>
+Goals</h2>
 <ul>
 <li>Retain existing on/off switches. No mains power switching by the dimmer.<ul>
 <li>Avoids safety considerations and complexity.</li>
@@ -91,7 +91,7 @@ Design goals</h2>
 <li>Power interruption resilience: doesn't lose dimming level and keeps working.</li>
 </ul>
 <h2><a class="anchor" id="autotoc_md2"></a>
-Design approach</h2>
+Approach</h2>
 <ul>
 <li>ESP32-WROOM dev board for each tx and rx.</li>
 <li>ESP-IDF environment because several threads will be needed.<ul>

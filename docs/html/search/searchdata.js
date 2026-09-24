@@ -6,7 +6,7 @@ var indexSectionsWithContent =
   3: "acgis",
   4: "cdghlnostv",
   5: "bcdiklmnoprstw",
-  6: "01dvw"
+  6: "01dlvw"
 };
 
 var indexSectionNames =

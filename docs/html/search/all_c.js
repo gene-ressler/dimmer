@@ -21,5 +21,6 @@ var searchData=
   ['level_5fmax_18',['level_max',['../structlevel__encoder.html#ad7399f131808ec9d94356568430e221b',1,'level_encoder::level_max'],['../dimmer_8c.html#a28e3d724c25aa80c53d9fef5d9dbad92',1,'LEVEL_MAX:&#160;dimmer.c']]],
   ['level_5fmils_19',['level_mils',['../structshared.html#a2915d07d54a387fa0a406aa47a735cca',1,'shared::level_mils'],['../structcheckpoint.html#a2574be17c5ccdc09ee09333ea1b76eeb',1,'checkpoint::level_mils'],['../structdimmer__payload.html#a768bf81f47c108bf5b7d2785b2c51018',1,'dimmer_payload::level_mils']]],
   ['level_5fpoll_5fms_20',['LEVEL_POLL_MS',['../encoder_8c.html#ad11b785a3f263f73f9cf212091ad5030',1,'encoder.c']]],
-  ['level_5fsw_5fgpio_21',['LEVEL_SW_GPIO',['../dimmer_8c.html#ae86597822ccace599db448bc621d5f61',1,'dimmer.c']]]
+  ['level_5fsw_5fgpio_21',['LEVEL_SW_GPIO',['../dimmer_8c.html#ae86597822ccace599db448bc621d5f61',1,'dimmer.c']]],
+  ['lignt_20dimmer_22',['Wireless 0-10 volt lignt dimmer',['../index.html',1,'']]]
 ];

@@ -1,9 +1,9 @@
-\chapter{Wireless 0-\/10 volt dimmer}
-\hypertarget{index}{}\label{index}\index{Wireless 0-\/10 volt dimmer@{Wireless 0-\/10 volt dimmer}}
+\chapter{Wireless 0-\/10 volt lignt dimmer}
+\hypertarget{index}{}\label{index}\index{Wireless 0-\/10 volt lignt dimmer@{Wireless 0-\/10 volt lignt dimmer}}
 \hypertarget{index_autotoc_md0}{}\doxysection{\texorpdfstring{Design and implementation notes}{Design and implementation notes}}\label{index_autotoc_md0}
 This design is for the case of 0-\/10 volt dimmable fixtures controlled by multiple switches replacing old fixtures that either weren\textquotesingle{}t dimmable or used mains dimming, e.\+g. standard triac-\/based devices. Therefore either new 0-\/10 volt wiring or a wireless solution is needed. This project is about the second approach.
 
-It is my first ESP32 project. All feedback is very welcome. Be kind.\hypertarget{index_autotoc_md1}{}\doxysubsection{\texorpdfstring{Design goals}{Design goals}}\label{index_autotoc_md1}
+It is my first ESP32 project. All feedback is very welcome. Be kind.\hypertarget{index_autotoc_md1}{}\doxysubsection{\texorpdfstring{Goals}{Goals}}\label{index_autotoc_md1}
 
 \begin{DoxyItemize}
 \item Retain existing on/off switches. No mains power switching by the dimmer.
@@ -15,7 +15,7 @@ It is my first ESP32 project. All feedback is very welcome. Be kind.\hypertarget
 \item No batteries. Mains power for all boxes.
 \item Secure\+: Reasonably proof against playback and spoofing attacks.
 \item Power interruption resilience\+: doesn\textquotesingle{}t lose dimming level and keeps working.
-\end{DoxyItemize}\hypertarget{index_autotoc_md2}{}\doxysubsection{\texorpdfstring{Design approach}{Design approach}}\label{index_autotoc_md2}
+\end{DoxyItemize}\hypertarget{index_autotoc_md2}{}\doxysubsection{\texorpdfstring{Approach}{Approach}}\label{index_autotoc_md2}
 
 \begin{DoxyItemize}
 \item ESP32-\/\+WROOM dev board for each tx and rx.
