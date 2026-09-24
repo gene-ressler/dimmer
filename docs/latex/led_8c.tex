@@ -1,0 +1,83 @@
+\doxysection{/home/gene/\+Work/dimmer/main/led.c File Reference}
+\hypertarget{led_8c}{}\label{led_8c}\index{/home/gene/Work/dimmer/main/led.c@{/home/gene/Work/dimmer/main/led.c}}
+
+
+Variable count flashing LED implementation.  
+
+
+{\ttfamily \#include "{}led.\+h"{}}\newline
+{\ttfamily \#include "{}esp\+\_\+log.\+h"{}}\newline
+Include dependency graph for led.\+c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{led_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{led_8c_a740f4663b9a4f3ac23729f452c965839}\label{led_8c_a740f4663b9a4f3ac23729f452c965839} 
+\#define {\bfseries LED\+\_\+\+ON\+\_\+\+MS}~50
+\begin{DoxyCompactList}\small\item\em LED flash duration. \end{DoxyCompactList}\item 
+\Hypertarget{led_8c_a89166819395c7210100d87c1c6b38236}\label{led_8c_a89166819395c7210100d87c1c6b38236} 
+\#define {\bfseries LED\+\_\+\+SHORT\+\_\+\+OFF\+\_\+\+MS}~300
+\begin{DoxyCompactList}\small\item\em LED off duration between flashes. \end{DoxyCompactList}\item 
+\Hypertarget{led_8c_afceb3484099a6b17a682853e9b12ddf4}\label{led_8c_afceb3484099a6b17a682853e9b12ddf4} 
+\#define {\bfseries LED\+\_\+\+LONG\+\_\+\+OFF\+\_\+\+MS}~1000
+\begin{DoxyCompactList}\small\item\em LED off duration between flash sequences. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{led_8c_aa82ba14ada5fc9f6de98eff198af3f86}{initialize\+\_\+led}} (struct \mbox{\hyperlink{structled}{led}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structled}{led}}, char \texorpdfstring{$\ast$}{*}name, gpio\+\_\+num\+\_\+t gpio)
+\begin{DoxyCompactList}\small\item\em Initializes data for a flashing LED. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{led_8c_a4c54059fd0271174d2be0d0b4df5dacb}{set\+\_\+led\+\_\+flash\+\_\+count}} (struct \mbox{\hyperlink{structled}{led}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structled}{led}}, uint8\+\_\+t count)
+\begin{DoxyCompactList}\small\item\em Sets LED flash count. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Variable count flashing LED implementation. 
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{led_8c_aa82ba14ada5fc9f6de98eff198af3f86}\label{led_8c_aa82ba14ada5fc9f6de98eff198af3f86} 
+\index{led.c@{led.c}!initialize\_led@{initialize\_led}}
+\index{initialize\_led@{initialize\_led}!led.c@{led.c}}
+\doxysubsubsection{\texorpdfstring{initialize\_led()}{initialize\_led()}}
+{\footnotesize\ttfamily void initialize\+\_\+led (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structled}{led}} \texorpdfstring{$\ast$}{*}}]{led,  }\item[{char \texorpdfstring{$\ast$}{*}}]{name,  }\item[{gpio\+\_\+num\+\_\+t}]{gpio }\end{DoxyParamCaption})}
+
+
+
+Initializes data for a flashing LED. 
+
+Sets up the GPIO output pin. Initial state is not flashing.
+
+
+\begin{DoxyParams}{Parameters}
+{\em led} & LED to be initialized. \\
+\hline
+{\em name} & Name of the LED for logging. \\
+\hline
+{\em gpio} & GPIO pin driving the LED. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{led_8c_a4c54059fd0271174d2be0d0b4df5dacb}\label{led_8c_a4c54059fd0271174d2be0d0b4df5dacb} 
+\index{led.c@{led.c}!set\_led\_flash\_count@{set\_led\_flash\_count}}
+\index{set\_led\_flash\_count@{set\_led\_flash\_count}!led.c@{led.c}}
+\doxysubsubsection{\texorpdfstring{set\_led\_flash\_count()}{set\_led\_flash\_count()}}
+{\footnotesize\ttfamily void set\+\_\+led\+\_\+flash\+\_\+count (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structled}{led}} \texorpdfstring{$\ast$}{*}}]{led,  }\item[{uint8\+\_\+t}]{count }\end{DoxyParamCaption})}
+
+
+
+Sets LED flash count. 
+
+Thread safe. Halts any flashing in progress and starts a new sequence. Count of zero turns off the LED completely.
+
+
+\begin{DoxyParams}{Parameters}
+{\em led} & initialized data for flashing LED \\
+\hline
+{\em count} & number of times to flash between pauses \\
+\hline
+\end{DoxyParams}

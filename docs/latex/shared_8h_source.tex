@@ -1,0 +1,54 @@
+\doxysection{shared.\+h}
+\hypertarget{shared_8h_source}{}\label{shared_8h_source}\index{/home/gene/Work/dimmer/main/include/shared.h@{/home/gene/Work/dimmer/main/include/shared.h}}
+\mbox{\hyperlink{shared_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <stdatomic.h>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}freertos/FreeRTOS.h"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}freertos/semphr.h"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}nvs\_flash.h"{}}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ CHECKPOINT\_TASK\_STACK\_SIZE\ 2048\ \ }}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structcheckpoint}{checkpoint}}\ \{}
+\DoxyCodeLine{00018\ \ \ uint32\_t\ \mbox{\hyperlink{structcheckpoint_a72408ea1e24b2bbfeb94c8b7209c6d5e}{sequence}};\ \ \ \ }
+\DoxyCodeLine{00019\ \ \ uint16\_t\ \mbox{\hyperlink{structcheckpoint_a2574be17c5ccdc09ee09333ea1b76eeb}{level\_mils}};\ \ }
+\DoxyCodeLine{00020\ \};}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structshared}{shared}}\ \{}
+\DoxyCodeLine{00024\ \ \ \textcolor{comment}{//\ Shared\ data.}}
+\DoxyCodeLine{00025\ \ \ \_Atomic\ uint32\_t\ \mbox{\hyperlink{structshared_abb68357a2409abe93770383e528c1fc1}{sequence}};\ \ \ \ }
+\DoxyCodeLine{00026\ \ \ \_Atomic\ uint16\_t\ \mbox{\hyperlink{structshared_a2915d07d54a387fa0a406aa47a735cca}{level\_mils}};\ \ }
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structcheckpoint}{checkpoint}}\ \mbox{\hyperlink{structcheckpoint}{checkpoint}}[1];\ \ }
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ nvs\_handle\_t\ \mbox{\hyperlink{structshared_a29882afe08d2a0784778814e3362b064}{nvs}};\ \ }
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ TaskHandle\_t\ \mbox{\hyperlink{structshared_a2c59cb7895e98b03417920534c72f031}{checkpoint\_task}};\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00033\ \ \ StaticTask\_t\ \mbox{\hyperlink{structshared_a42be675c69178bc71ad5fcca63548893}{checkpoint\_task\_state}}[1];\ \ }
+\DoxyCodeLine{00034\ \ \ StackType\_t\ \mbox{\hyperlink{structshared_a47699556a863cf2817833010571cf617}{checkpoint\_task\_stack}}[\mbox{\hyperlink{shared_8h_a7b1a1c7593e3dba1c9fc99905a190d3b}{CHECKPOINT\_TASK\_STACK\_SIZE}}];\ \ }
+\DoxyCodeLine{00035\ \};}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00038\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{shared_8h_afd543cfd83a965c18d4518ce51d98dc8}{initialize\_shared}}(\textcolor{keyword}{struct}\ \mbox{\hyperlink{structshared}{shared}}\ *\mbox{\hyperlink{structshared}{shared}});}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00041\ \textcolor{keyword}{inline}\ uint32\_t\ \mbox{\hyperlink{shared_8h_a512320dbb93fcf34d6b3d0730379f5b6}{get\_shared\_sequence}}(\textcolor{keyword}{struct}\ \mbox{\hyperlink{structshared}{shared}}\ *\mbox{\hyperlink{structshared}{shared}})\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structshared}{shared}}-\/>\mbox{\hyperlink{structshared_abb68357a2409abe93770383e528c1fc1}{sequence}};\ \}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00044\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{shared_8h_a98d47808217f559d936f5d8764cded01}{set\_shared\_sequence}}(\textcolor{keyword}{struct}\ \mbox{\hyperlink{structshared}{shared}}\ *\mbox{\hyperlink{structshared}{shared}},\ uint32\_t\ \mbox{\hyperlink{structcheckpoint_a72408ea1e24b2bbfeb94c8b7209c6d5e}{sequence}})\ \{}
+\DoxyCodeLine{00045\ \ \ \mbox{\hyperlink{structshared}{shared}}-\/>\mbox{\hyperlink{structshared_abb68357a2409abe93770383e528c1fc1}{sequence}}\ =\ \mbox{\hyperlink{structcheckpoint_a72408ea1e24b2bbfeb94c8b7209c6d5e}{sequence}};}
+\DoxyCodeLine{00046\ \}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00049\ \textcolor{keyword}{inline}\ uint32\_t\ \mbox{\hyperlink{shared_8h_ab07ff471cec36ac6b1938c43dc70531f}{increment\_shared\_sequence}}(\textcolor{keyword}{struct}\ \mbox{\hyperlink{structshared}{shared}}\ *\mbox{\hyperlink{structshared}{shared}})\ \{\ \textcolor{keywordflow}{return}\ ++\mbox{\hyperlink{structshared}{shared}}-\/>\mbox{\hyperlink{structshared_abb68357a2409abe93770383e528c1fc1}{sequence}};\ \}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00052\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{shared_8h_a7aca0f10cef849ed64c96085f9f567ba}{advance\_shared\_sequence}}(\textcolor{keyword}{struct}\ \mbox{\hyperlink{structshared}{shared}}\ *\mbox{\hyperlink{structshared}{shared}},\ uint32\_t\ from,\ uint32\_t\ to);}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00055\ \textcolor{keyword}{inline}\ uint16\_t\ \mbox{\hyperlink{shared_8h_a7d3384b52cb1e18e889bfd850479f143}{get\_shared\_level\_mils}}(\textcolor{keyword}{struct}\ \mbox{\hyperlink{structshared}{shared}}\ *\mbox{\hyperlink{structshared}{shared}})\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structshared}{shared}}-\/>\mbox{\hyperlink{structshared_a2915d07d54a387fa0a406aa47a735cca}{level\_mils}};\ \}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00058\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{shared_8h_a5e1e2073ec1614280aefe1cb8e1af63b}{set\_shared\_level\_mils}}(\textcolor{keyword}{struct}\ \mbox{\hyperlink{structshared}{shared}}\ *\mbox{\hyperlink{structshared}{shared}},\ int32\_t\ \mbox{\hyperlink{structcheckpoint_a2574be17c5ccdc09ee09333ea1b76eeb}{level\_mils}});}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00061\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structcheckpoint}{checkpoint}}(\textcolor{keyword}{struct}\ \mbox{\hyperlink{structshared}{shared}}\ *\mbox{\hyperlink{structshared}{shared}});}
+
+\end{DoxyCode}

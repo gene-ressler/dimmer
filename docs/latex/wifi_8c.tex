@@ -1,0 +1,93 @@
+\doxysection{/home/gene/\+Work/dimmer/main/wifi.c File Reference}
+\hypertarget{wifi_8c}{}\label{wifi_8c}\index{/home/gene/Work/dimmer/main/wifi.c@{/home/gene/Work/dimmer/main/wifi.c}}
+
+
+Wifi broadcast and receive singleton implementation.  
+
+
+{\ttfamily \#include "{}wifi.\+h"{}}\newline
+{\ttfamily \#include $<$stdatomic.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include "{}esp\+\_\+log.\+h"{}}\newline
+{\ttfamily \#include "{}esp\+\_\+mac.\+h"{}}\newline
+{\ttfamily \#include "{}esp\+\_\+now.\+h"{}}\newline
+{\ttfamily \#include "{}esp\+\_\+wifi.\+h"{}}\newline
+{\ttfamily \#include "{}freertos/\+Free\+RTOS.\+h"{}}\newline
+{\ttfamily \#include "{}freertos/semphr.\+h"{}}\newline
+{\ttfamily \#include "{}psa/crypto.\+h"{}}\newline
+{\ttfamily \#include "{}shared.\+h"{}}\newline
+Include dependency graph for wifi.\+c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{wifi_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structwifi__payload}{wifi\+\_\+payload}}
+\begin{DoxyCompactList}\small\item\em Packed wifi payload wrapping the user\textquotesingle{}s data. \end{DoxyCompactList}\item 
+struct {\bfseries wifi\+\_\+state}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{wifi_8c_aa8e00b35a722485b315d08c337d04dae}\label{wifi_8c_aa8e00b35a722485b315d08c337d04dae} 
+\#define {\bfseries WIFI\+\_\+\+CHANNEL}~3
+\begin{DoxyCompactList}\small\item\em Broadcast channel. \end{DoxyCompactList}\item 
+\Hypertarget{wifi_8c_a3c81db86d08ea75ddebf08f823c61803}\label{wifi_8c_a3c81db86d08ea75ddebf08f823c61803} 
+\#define {\bfseries SEND\+\_\+\+INTERVAL\+\_\+\+MS}~2000
+\begin{DoxyCompactList}\small\item\em Delay between repeated broadcasts. \end{DoxyCompactList}\item 
+\Hypertarget{wifi_8c_a1200a475d97dc63f36eb0ba4eceda5fe}\label{wifi_8c_a1200a475d97dc63f36eb0ba4eceda5fe} 
+\#define {\bfseries WIFI\+\_\+\+TASK\+\_\+\+STACK\+\_\+\+SIZE}~4096
+\begin{DoxyCompactList}\small\item\em Wifi repeated send task stack size. \end{DoxyCompactList}\item 
+\Hypertarget{wifi_8c_aebddcaf2783e758628a2ca322f638ecd}\label{wifi_8c_aebddcaf2783e758628a2ca322f638ecd} 
+\#define {\bfseries PAYLOAD\+\_\+\+HEADER\+\_\+\+SIZE}~22
+\begin{DoxyCompactList}\small\item\em Size of payload header (bytes). \end{DoxyCompactList}\item 
+\Hypertarget{wifi_8c_a7422fcf2eb5e5fa72ab4acd22d6bc882}\label{wifi_8c_a7422fcf2eb5e5fa72ab4acd22d6bc882} 
+\#define {\bfseries MAX\+\_\+\+PAYLOAD\+\_\+\+DATA\+\_\+\+SIZE}~(ESP\+\_\+\+NOW\+\_\+\+MAX\+\_\+\+DATA\+\_\+\+LEN -\/ \mbox{\hyperlink{wifi_8c_aebddcaf2783e758628a2ca322f638ecd}{PAYLOAD\+\_\+\+HEADER\+\_\+\+SIZE}})
+\begin{DoxyCompactList}\small\item\em ESP-\/\+NOW limit on user payload size. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{wifi_8c_adec51955d74e550592e446b48a238740}{send\+\_\+repeated}} (void \texorpdfstring{$\ast$}{*}data, uint16\+\_\+t len, uint16\+\_\+t count)
+\begin{DoxyCompactList}\small\item\em Wraps given data in a payload and broadcasts it repeatedly. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{wifi_8c_a435d6116bb6c900bb7aead8be3c7f48d}{initialize\+\_\+wifi}} (struct \mbox{\hyperlink{structshared}{shared}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structshared}{shared}}, void(\texorpdfstring{$\ast$}{*}on\+\_\+receive)(const void \texorpdfstring{$\ast$}{*}data, uint16\+\_\+t len))
+\begin{DoxyCompactList}\small\item\em Configures the ESP32\textquotesingle{}s wifi stack for ESP-\/\+NOW broadcasts. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Wifi broadcast and receive singleton implementation. 
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{wifi_8c_a435d6116bb6c900bb7aead8be3c7f48d}\label{wifi_8c_a435d6116bb6c900bb7aead8be3c7f48d} 
+\index{wifi.c@{wifi.c}!initialize\_wifi@{initialize\_wifi}}
+\index{initialize\_wifi@{initialize\_wifi}!wifi.c@{wifi.c}}
+\doxysubsubsection{\texorpdfstring{initialize\_wifi()}{initialize\_wifi()}}
+{\footnotesize\ttfamily void initialize\+\_\+wifi (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structshared}{shared}} \texorpdfstring{$\ast$}{*}}]{shared,  }\item[{void(\texorpdfstring{$\ast$}{*})(const void \texorpdfstring{$\ast$}{*}data, uint16\+\_\+t len)}]{on\+\_\+receive }\end{DoxyParamCaption})}
+
+
+
+Configures the ESP32\textquotesingle{}s wifi stack for ESP-\/\+NOW broadcasts. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em shared} & shared, checkpointed state variables containing broadcast sequence numbers \\
+\hline
+{\em on\+\_\+receive} & callback for valid broadcasts \\
+\hline
+\end{DoxyParams}
+\Hypertarget{wifi_8c_adec51955d74e550592e446b48a238740}\label{wifi_8c_adec51955d74e550592e446b48a238740} 
+\index{wifi.c@{wifi.c}!send\_repeated@{send\_repeated}}
+\index{send\_repeated@{send\_repeated}!wifi.c@{wifi.c}}
+\doxysubsubsection{\texorpdfstring{send\_repeated()}{send\_repeated()}}
+{\footnotesize\ttfamily void send\+\_\+repeated (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{data,  }\item[{uint16\+\_\+t}]{len,  }\item[{uint16\+\_\+t}]{count }\end{DoxyParamCaption})}
+
+
+
+Wraps given data in a payload and broadcasts it repeatedly. 
+
+Returns immediately; repeats continue asynchronously. Causes any previous repeats still in progress to be aborted before starting the new sequence. 

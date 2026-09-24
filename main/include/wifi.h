@@ -1,18 +1,12 @@
+/**
+ * @file
+ * @brief Wifi broadcast and receive singleton.
+ */
 #pragma once
-
-/** @brief Wifi broadcast and receive. */
 
 #include <stdint.h>
 
 #include "shared.h"
-
-/**
- * @brief Returns the device's MAC address as hex digits and text.
- *
- * @param mac 6-byte buffer for MAC address
- * @param text 18-character buffer for MAC address text including final null
- */
-void get_mac(uint8_t *mac, char *text);
 
 /**
  * @brief Configures the ESP32's wifi stack for ESP-NOW broadcasts.

@@ -1,10 +1,14 @@
+/**
+ * @file
+ * @brief Multi-thread shared and/or checkpointed state implementation.
+ */
 #include "shared.h"
 
 #include "esp_log.h"
 
-#define NAMESPACE "dimmer"
-#define KEY "ckpt-v1"
-#define UPDATE_DEBOUNCE_MS 800
+#define NAMESPACE "dimmer"    ///< NVS namespace for checkpoints.
+#define KEY "ckpt-v1"         ///< NVS key for checkpoints.
+#define DEBOUNCE_WAIT_MS 800  ///< Checkpointer debounce wait period.
 
 static const char tag[] = "shared";
 
@@ -53,7 +57,7 @@ static void checkpoint_task(void *parameters) {
     struct checkpoint snapshot[1], refetch[1];
     fetch_checkpoint(shared, snapshot);
     for (;;) {
-      vTaskDelay(UPDATE_DEBOUNCE_MS / portTICK_PERIOD_MS);
+      vTaskDelay(DEBOUNCE_WAIT_MS / portTICK_PERIOD_MS);
       fetch_checkpoint(shared, refetch);
       if (memcmp(snapshot, refetch, sizeof *refetch) == 0) {
         // Debounce is complete.

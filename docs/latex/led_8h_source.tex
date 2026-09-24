@@ -1,0 +1,32 @@
+\doxysection{led.\+h}
+\hypertarget{led_8h_source}{}\label{led_8h_source}\index{/home/gene/Work/dimmer/main/include/led.h@{/home/gene/Work/dimmer/main/include/led.h}}
+\mbox{\hyperlink{led_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}driver/gpio.h"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}freertos/FreeRTOS.h"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structled}{led}}\ \{}
+\DoxyCodeLine{00014\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structled_ab3dda6fdb1d16383723a0570d567a2b5}{name}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{00015\ \ \ gpio\_num\_t\ \mbox{\hyperlink{structled_a3c9d7d41d453d905397e2fb5be2da7f3}{gpio}};\ \ }
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \textcolor{comment}{//\ Internal.}}
+\DoxyCodeLine{00018\ \ \ StaticTimer\_t\ \mbox{\hyperlink{structled_aabb23192ee98f4f603c0f46cbbe2f42b}{timer\_state}}[1];\ \ }
+\DoxyCodeLine{00019\ \ \ TimerHandle\_t\ \mbox{\hyperlink{structled_affd177c1eebb73bee99faf1a5b583971}{timer}};\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00030\ \ \ uint16\_t\ \mbox{\hyperlink{structled_a614cf261ad4f19ea1ae5563c03baf906}{led\_state}};}
+\DoxyCodeLine{00031\ \ \ uint8\_t\ \mbox{\hyperlink{structled_a593d2a207263a6af08035f6fbad8a6c9}{last\_led\_state}};\ \ }
+\DoxyCodeLine{00032\ \};}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00043\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{led_8h_aa82ba14ada5fc9f6de98eff198af3f86}{initialize\_led}}(\textcolor{keyword}{struct}\ \mbox{\hyperlink{structled}{led}}\ *\mbox{\hyperlink{structled}{led}},\ \textcolor{keywordtype}{char}\ *name,\ gpio\_num\_t\ gpio);}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00054\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{led_8h_a4c54059fd0271174d2be0d0b4df5dacb}{set\_led\_flash\_count}}(\textcolor{keyword}{struct}\ \mbox{\hyperlink{structled}{led}}\ *\mbox{\hyperlink{structled}{led}},\ uint8\_t\ count);}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#define\ MILS\_TO\_FLASH\_COUNT(M)\ ((64\ +\ (M))\ /\ 128)}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ ONBOARD\_LED\_GPIO\ GPIO\_NUM\_2}}
+
+\end{DoxyCode}

@@ -1,14 +1,18 @@
+/**
+ * @file
+ * @brief PWM output implementation.
+ */
 #include "pwm.h"
 
 #include "driver/ledc.h"
 
-#define LEDC_TIMER LEDC_TIMER_0
-#define LEDC_MODE LEDC_LOW_SPEED_MODE
-#define LEDC_CHANNEL LEDC_CHANNEL_0
-#define LEDC_DUTY_RES LEDC_TIMER_7_BIT
-#define LEDC_PWM_FRAME_RATE 1000
-#define MILS_TO_DUTY(M) ((M) / 8)
-#define DUTY_TO_MILS(D) ((D) * 8)
+#define LEDC_TIMER LEDC_TIMER_0         ///< Timer to use for PWM.
+#define LEDC_MODE LEDC_LOW_SPEED_MODE   ///< Control mode to use for PWM.
+#define LEDC_CHANNEL LEDC_CHANNEL_0     ///< Control channel to use for PWM.
+#define LEDC_DUTY_RES LEDC_TIMER_7_BIT  ///< Timer resolution for PWM.
+#define LEDC_PWM_FRAME_RATE 1000        ///< Frame rate (hz) for output PWM signal.
+#define MILS_TO_DUTY(M) ((M) / 8)       ///< Converts [0..1024] to PWM duty cycle.
+#define DUTY_TO_MILS(D) ((D) * 8)       ///< Converts PWM duty cycle to [0..1024].
 
 void initialize_pwm_timer(void) {
   ledc_timer_config_t timer = {.speed_mode = LEDC_MODE,

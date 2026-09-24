@@ -1,0 +1,58 @@
+\doxysection{/home/gene/\+Work/dimmer/main/include/strap.h File Reference}
+\hypertarget{strap_8h}{}\label{strap_8h}\index{/home/gene/Work/dimmer/main/include/strap.h@{/home/gene/Work/dimmer/main/include/strap.h}}
+
+
+Configuration strap.  
+
+
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include "{}driver/gpio.\+h"{}}\newline
+Include dependency graph for strap.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=233pt]{strap_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{strap_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structstrap}{strap}}
+\begin{DoxyCompactList}\small\item\em Data for a strap. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{strap_8h_ac2486f37fa17c1ff3d9ddae39d8d3e44}\label{strap_8h_ac2486f37fa17c1ff3d9ddae39d8d3e44} 
+\#define {\bfseries IS\+\_\+\+STRAP\+\_\+\+PRESENT}(S)~((S)-\/$>$value == 0)
+\begin{DoxyCompactList}\small\item\em Returns true iff a ground strap existed for the given GPIO pin at initialization. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{strap_8h_a27858ad74a85a6324f007fe3d7a1d524}{initialize\+\_\+strap}} (struct \mbox{\hyperlink{structstrap}{strap}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structstrap}{strap}}, char \texorpdfstring{$\ast$}{*}name, gpio\+\_\+num\+\_\+t gpio)
+\begin{DoxyCompactList}\small\item\em Initializes and polls the value of strap. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Configuration strap. 
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{strap_8h_a27858ad74a85a6324f007fe3d7a1d524}\label{strap_8h_a27858ad74a85a6324f007fe3d7a1d524} 
+\index{strap.h@{strap.h}!initialize\_strap@{initialize\_strap}}
+\index{initialize\_strap@{initialize\_strap}!strap.h@{strap.h}}
+\doxysubsubsection{\texorpdfstring{initialize\_strap()}{initialize\_strap()}}
+{\footnotesize\ttfamily void initialize\+\_\+strap (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structstrap}{strap}} \texorpdfstring{$\ast$}{*}}]{strap,  }\item[{char \texorpdfstring{$\ast$}{*}}]{name,  }\item[{gpio\+\_\+num\+\_\+t}]{gpio }\end{DoxyParamCaption})}
+
+
+
+Initializes and polls the value of strap. 
+
+Sets up the strap GPIO input pin. It is pulled-\/up to HI (1) when no strap is present. It has value LO (0) only when strapped to ground. 

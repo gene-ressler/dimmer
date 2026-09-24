@@ -1,0 +1,30 @@
+\doxysection{wifi\+\_\+payload Struct Reference}
+\hypertarget{structwifi__payload}{}\label{structwifi__payload}\index{wifi\_payload@{wifi\_payload}}
+
+
+Packed wifi payload wrapping the user\textquotesingle{}s data.  
+
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structwifi__payload_ae67bb3a7d1c78bbe12bda8b959b93b78}\label{structwifi__payload_ae67bb3a7d1c78bbe12bda8b959b93b78} 
+uint32\+\_\+t {\bfseries sequence}
+\begin{DoxyCompactList}\small\item\em Broadcast sequence number. \end{DoxyCompactList}\item 
+\Hypertarget{structwifi__payload_ae5d492e4394e47a4e8e3ba2a73279be7}\label{structwifi__payload_ae5d492e4394e47a4e8e3ba2a73279be7} 
+uint8\+\_\+t {\bfseries hmac} \mbox{[}16\mbox{]}
+\begin{DoxyCompactList}\small\item\em Secure hash based on payload contents. \end{DoxyCompactList}\item 
+\Hypertarget{structwifi__payload_a8cc227402a5dbd8fecafb9fd9d488270}\label{structwifi__payload_a8cc227402a5dbd8fecafb9fd9d488270} 
+uint16\+\_\+t {\bfseries data\+\_\+len}
+\begin{DoxyCompactList}\small\item\em Actual user data size (bytes). \end{DoxyCompactList}\item 
+\Hypertarget{structwifi__payload_ae658f9646f73ce82b607b6bbfa4b41f1}\label{structwifi__payload_ae658f9646f73ce82b607b6bbfa4b41f1} 
+uint8\+\_\+t {\bfseries data} \mbox{[}\mbox{\hyperlink{wifi_8c_a7422fcf2eb5e5fa72ab4acd22d6bc882}{MAX\+\_\+\+PAYLOAD\+\_\+\+DATA\+\_\+\+SIZE}}\mbox{]}
+\begin{DoxyCompactList}\small\item\em User data buffer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Packed wifi payload wrapping the user\textquotesingle{}s data. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/gene/\+Work/dimmer/main/\mbox{\hyperlink{wifi_8c}{wifi.\+c}}\end{DoxyCompactItemize}

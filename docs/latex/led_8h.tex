@@ -1,0 +1,93 @@
+\doxysection{/home/gene/\+Work/dimmer/main/include/led.h File Reference}
+\hypertarget{led_8h}{}\label{led_8h}\index{/home/gene/Work/dimmer/main/include/led.h@{/home/gene/Work/dimmer/main/include/led.h}}
+
+
+Variable count flashing LED.  
+
+
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include "{}driver/gpio.\+h"{}}\newline
+{\ttfamily \#include "{}freertos/\+Free\+RTOS.\+h"{}}\newline
+Include dependency graph for led.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{led_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{led_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structled}{led}}
+\begin{DoxyCompactList}\small\item\em Data for a timer-\/driven flashing LED. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{led_8h_a209909db8cd93a505bd73c1e92520eca}\label{led_8h_a209909db8cd93a505bd73c1e92520eca} 
+\#define {\bfseries MILS\+\_\+\+TO\+\_\+\+FLASH\+\_\+\+COUNT}(M)~((64 + (M)) / 128)
+\begin{DoxyCompactList}\small\item\em Converts a value in 0..1024 to an indicative number of flashes. \end{DoxyCompactList}\item 
+\Hypertarget{led_8h_a888953f69d37ac217971fa6a1c7aa2af}\label{led_8h_a888953f69d37ac217971fa6a1c7aa2af} 
+\#define {\bfseries ONBOARD\+\_\+\+LED\+\_\+\+GPIO}~GPIO\+\_\+\+NUM\+\_\+2
+\begin{DoxyCompactList}\small\item\em GPIO pin number of the on-\/board LED. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{led_8h_aa82ba14ada5fc9f6de98eff198af3f86}{initialize\+\_\+led}} (struct \mbox{\hyperlink{structled}{led}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structled}{led}}, char \texorpdfstring{$\ast$}{*}name, gpio\+\_\+num\+\_\+t gpio)
+\begin{DoxyCompactList}\small\item\em Initializes data for a flashing LED. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{led_8h_a4c54059fd0271174d2be0d0b4df5dacb}{set\+\_\+led\+\_\+flash\+\_\+count}} (struct \mbox{\hyperlink{structled}{led}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structled}{led}}, uint8\+\_\+t count)
+\begin{DoxyCompactList}\small\item\em Sets LED flash count. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Variable count flashing LED. 
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{led_8h_aa82ba14ada5fc9f6de98eff198af3f86}\label{led_8h_aa82ba14ada5fc9f6de98eff198af3f86} 
+\index{led.h@{led.h}!initialize\_led@{initialize\_led}}
+\index{initialize\_led@{initialize\_led}!led.h@{led.h}}
+\doxysubsubsection{\texorpdfstring{initialize\_led()}{initialize\_led()}}
+{\footnotesize\ttfamily void initialize\+\_\+led (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structled}{led}} \texorpdfstring{$\ast$}{*}}]{led,  }\item[{char \texorpdfstring{$\ast$}{*}}]{name,  }\item[{gpio\+\_\+num\+\_\+t}]{gpio }\end{DoxyParamCaption})}
+
+
+
+Initializes data for a flashing LED. 
+
+Sets up the GPIO output pin. Initial state is not flashing.
+
+
+\begin{DoxyParams}{Parameters}
+{\em led} & LED to be initialized. \\
+\hline
+{\em name} & Name of the LED for logging. \\
+\hline
+{\em gpio} & GPIO pin driving the LED. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{led_8h_a4c54059fd0271174d2be0d0b4df5dacb}\label{led_8h_a4c54059fd0271174d2be0d0b4df5dacb} 
+\index{led.h@{led.h}!set\_led\_flash\_count@{set\_led\_flash\_count}}
+\index{set\_led\_flash\_count@{set\_led\_flash\_count}!led.h@{led.h}}
+\doxysubsubsection{\texorpdfstring{set\_led\_flash\_count()}{set\_led\_flash\_count()}}
+{\footnotesize\ttfamily void set\+\_\+led\+\_\+flash\+\_\+count (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structled}{led}} \texorpdfstring{$\ast$}{*}}]{led,  }\item[{uint8\+\_\+t}]{count }\end{DoxyParamCaption})}
+
+
+
+Sets LED flash count. 
+
+Thread safe. Halts any flashing in progress and starts a new sequence. Count of zero turns off the LED completely.
+
+
+\begin{DoxyParams}{Parameters}
+{\em led} & initialized data for flashing LED \\
+\hline
+{\em count} & number of times to flash between pauses \\
+\hline
+\end{DoxyParams}

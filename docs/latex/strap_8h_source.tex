@@ -1,0 +1,21 @@
+\doxysection{strap.\+h}
+\hypertarget{strap_8h_source}{}\label{strap_8h_source}\index{/home/gene/Work/dimmer/main/include/strap.h@{/home/gene/Work/dimmer/main/include/strap.h}}
+\mbox{\hyperlink{strap_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}driver/gpio.h"{}}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structstrap}{strap}}\ \{}
+\DoxyCodeLine{00013\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structstrap_a11393728b7265629c47f980d87049e02}{name}};\ \ \ \ \ }
+\DoxyCodeLine{00014\ \ \ uint8\_t\ \mbox{\hyperlink{structstrap_ad84cc5a393e61170c7dabba6e29d3326}{value}};\ \ }
+\DoxyCodeLine{00015\ \};}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ IS\_STRAP\_PRESENT(S)\ ((S)-\/>value\ ==\ 0)}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00026\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{strap_8h_a27858ad74a85a6324f007fe3d7a1d524}{initialize\_strap}}(\textcolor{keyword}{struct}\ \mbox{\hyperlink{structstrap}{strap}}\ *\mbox{\hyperlink{structstrap}{strap}},\ \textcolor{keywordtype}{char}\ *name,\ gpio\_num\_t\ gpio);}
+
+\end{DoxyCode}

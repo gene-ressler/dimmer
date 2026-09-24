@@ -1,0 +1,52 @@
+\doxysection{shared Struct Reference}
+\hypertarget{structshared}{}\label{structshared}\index{shared@{shared}}
+
+
+State shared among threads and/or checkpointed to persistent store.  
+
+
+
+
+{\ttfamily \#include $<$shared.\+h$>$}
+
+
+
+Collaboration diagram for shared\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=172pt]{structshared__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structshared_abb68357a2409abe93770383e528c1fc1}\label{structshared_abb68357a2409abe93770383e528c1fc1} 
+\+\_\+\+Atomic uint32\+\_\+t {\bfseries sequence}
+\begin{DoxyCompactList}\small\item\em Broadcast sequence number. \end{DoxyCompactList}\item 
+\Hypertarget{structshared_a2915d07d54a387fa0a406aa47a735cca}\label{structshared_a2915d07d54a387fa0a406aa47a735cca} 
+\+\_\+\+Atomic uint16\+\_\+t {\bfseries level\+\_\+mils}
+\begin{DoxyCompactList}\small\item\em Dimming level in \mbox{[}0..1024\mbox{]}. \end{DoxyCompactList}\item 
+\Hypertarget{structshared_ac34cc84475bb529675a8a5060d841664}\label{structshared_ac34cc84475bb529675a8a5060d841664} 
+struct \mbox{\hyperlink{structcheckpoint}{checkpoint}} {\bfseries checkpoint} \mbox{[}1\mbox{]}
+\begin{DoxyCompactList}\small\item\em The last data saved as a checkpoint. \end{DoxyCompactList}\item 
+\Hypertarget{structshared_a29882afe08d2a0784778814e3362b064}\label{structshared_a29882afe08d2a0784778814e3362b064} 
+nvs\+\_\+handle\+\_\+t {\bfseries nvs}
+\begin{DoxyCompactList}\small\item\em Non-\/volatile storage. \end{DoxyCompactList}\item 
+\Hypertarget{structshared_a2c59cb7895e98b03417920534c72f031}\label{structshared_a2c59cb7895e98b03417920534c72f031} 
+Task\+Handle\+\_\+t {\bfseries checkpoint\+\_\+task}
+\begin{DoxyCompactList}\small\item\em Checkpoint manager task. \end{DoxyCompactList}\item 
+\Hypertarget{structshared_a42be675c69178bc71ad5fcca63548893}\label{structshared_a42be675c69178bc71ad5fcca63548893} 
+Static\+Task\+\_\+t {\bfseries checkpoint\+\_\+task\+\_\+state} \mbox{[}1\mbox{]}
+\begin{DoxyCompactList}\small\item\em Checkpoint manager task state. \end{DoxyCompactList}\item 
+\Hypertarget{structshared_a47699556a863cf2817833010571cf617}\label{structshared_a47699556a863cf2817833010571cf617} 
+Stack\+Type\+\_\+t {\bfseries checkpoint\+\_\+task\+\_\+stack} \mbox{[}\mbox{\hyperlink{shared_8h_a7b1a1c7593e3dba1c9fc99905a190d3b}{CHECKPOINT\+\_\+\+TASK\+\_\+\+STACK\+\_\+\+SIZE}}\mbox{]}
+\begin{DoxyCompactList}\small\item\em Checkpoint manager stack. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+State shared among threads and/or checkpointed to persistent store. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/gene/\+Work/dimmer/main/include/\mbox{\hyperlink{shared_8h}{shared.\+h}}\end{DoxyCompactItemize}

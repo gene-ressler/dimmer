@@ -1,0 +1,84 @@
+\doxysection{/home/gene/\+Work/dimmer/main/dimmer.c File Reference}
+\hypertarget{dimmer_8c}{}\label{dimmer_8c}\index{/home/gene/Work/dimmer/main/dimmer.c@{/home/gene/Work/dimmer/main/dimmer.c}}
+
+
+Wireless 0-\/10 volt dimmer app main.  
+
+
+{\ttfamily \#include "{}encoder.\+h"{}}\newline
+{\ttfamily \#include "{}esp\+\_\+log.\+h"{}}\newline
+{\ttfamily \#include "{}led.\+h"{}}\newline
+{\ttfamily \#include "{}pwm.\+h"{}}\newline
+{\ttfamily \#include "{}shared.\+h"{}}\newline
+{\ttfamily \#include "{}strap.\+h"{}}\newline
+{\ttfamily \#include "{}wifi.\+h"{}}\newline
+Include dependency graph for dimmer.\+c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dimmer_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structdimmer__payload}{dimmer\+\_\+payload}}
+\begin{DoxyCompactList}\small\item\em Packed broadcast data payload. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{dimmer_8c_ae3c871384e82533b86f3d03629e9ac1e}\label{dimmer_8c_ae3c871384e82533b86f3d03629e9ac1e} 
+\#define {\bfseries RECV\+\_\+\+STRAP\+\_\+\+GPIO}~19
+\begin{DoxyCompactList}\small\item\em Ground strap for receiver selection gpio pin. \end{DoxyCompactList}\item 
+\Hypertarget{dimmer_8c_ae86597822ccace599db448bc621d5f61}\label{dimmer_8c_ae86597822ccace599db448bc621d5f61} 
+\#define {\bfseries LEVEL\+\_\+\+SW\+\_\+\+GPIO}~21
+\begin{DoxyCompactList}\small\item\em Rotary encoder push switch gpio pin. \end{DoxyCompactList}\item 
+\Hypertarget{dimmer_8c_a09fa5f2b6dd2766d999cc397952256ca}\label{dimmer_8c_a09fa5f2b6dd2766d999cc397952256ca} 
+\#define {\bfseries LEVEL\+\_\+\+CLK\+\_\+\+GPIO}~22
+\begin{DoxyCompactList}\small\item\em Rotary encoder quadrature signal gpio pin. \end{DoxyCompactList}\item 
+\Hypertarget{dimmer_8c_a6d03af19183967f2d92abc09ed55b79a}\label{dimmer_8c_a6d03af19183967f2d92abc09ed55b79a} 
+\#define {\bfseries LEVEL\+\_\+\+DT\+\_\+\+GPIO}~23
+\begin{DoxyCompactList}\small\item\em Rotary encoder quadrature signal gpio pin. \end{DoxyCompactList}\item 
+\Hypertarget{dimmer_8c_a6f18370cda9839ad9d129b740b2a7739}\label{dimmer_8c_a6f18370cda9839ad9d129b740b2a7739} 
+\#define {\bfseries CTRL\+\_\+\+OUT\+\_\+\+GPIO}~25
+\begin{DoxyCompactList}\small\item\em PWM output gpio pin. \end{DoxyCompactList}\item 
+\Hypertarget{dimmer_8c_a28e3d724c25aa80c53d9fef5d9dbad92}\label{dimmer_8c_a28e3d724c25aa80c53d9fef5d9dbad92} 
+\#define {\bfseries LEVEL\+\_\+\+MAX}~64
+\begin{DoxyCompactList}\small\item\em Rotary quadrature clicks for 10 volts. \end{DoxyCompactList}\item 
+\Hypertarget{dimmer_8c_a289eb41a6d1eca4502e2e2482171b6a4}\label{dimmer_8c_a289eb41a6d1eca4502e2e2482171b6a4} 
+\#define {\bfseries STARTUP\+\_\+\+SEND\+\_\+\+REPEAT\+\_\+\+COUNT}~15
+\begin{DoxyCompactList}\small\item\em Number of broadcast repeats on power up. \end{DoxyCompactList}\item 
+\Hypertarget{dimmer_8c_a49a064d0dca9a7757f27af70e13584a1}\label{dimmer_8c_a49a064d0dca9a7757f27af70e13584a1} 
+\#define {\bfseries STANDARD\+\_\+\+SEND\+\_\+\+REPEAT\+\_\+\+COUNT}~5
+\begin{DoxyCompactList}\small\item\em Number of broadcast repeats on level change. \end{DoxyCompactList}\item 
+\Hypertarget{dimmer_8c_ae6baa8dfe690cfb5c96c4c9d9057c61b}\label{dimmer_8c_ae6baa8dfe690cfb5c96c4c9d9057c61b} 
+\#define {\bfseries IS\+\_\+\+MODE\+\_\+\+XMIT}~(!\mbox{\hyperlink{dimmer_8c_a1822c39f6b48ee1c6c4c0152f68653a6}{IS\+\_\+\+MODE\+\_\+\+RECV}})
+\begin{DoxyCompactList}\small\item\em Whether device is strapped for transmit. \end{DoxyCompactList}\item 
+\Hypertarget{dimmer_8c_a1822c39f6b48ee1c6c4c0152f68653a6}\label{dimmer_8c_a1822c39f6b48ee1c6c4c0152f68653a6} 
+\#define {\bfseries IS\+\_\+\+MODE\+\_\+\+RECV}~\mbox{\hyperlink{strap_8h_ac2486f37fa17c1ff3d9ddae39d8d3e44}{IS\+\_\+\+STRAP\+\_\+\+PRESENT}}(straps)
+\begin{DoxyCompactList}\small\item\em Whether device is strapped for receive. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{dimmer_8c_a630544a7f0a2cc40d8a7fefab7e2fe70}\label{dimmer_8c_a630544a7f0a2cc40d8a7fefab7e2fe70} 
+void {\bfseries app\+\_\+main} (void)
+\begin{DoxyCompactList}\small\item\em Handles firmware entry call. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Wireless 0-\/10 volt dimmer app main. 
+
+Entry point for dimmer firmware. See README.\+md for details.
+
+\begin{DoxyAuthor}{Author}
+Gene Ressler 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2026-\/09-\/23 
+\end{DoxyDate}
+\begin{DoxyVersion}{Version}
+0.\+9 
+\end{DoxyVersion}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2026 Gene Ressler. All rights reserved. 
+\end{DoxyCopyright}

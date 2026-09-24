@@ -1,6 +1,8 @@
+/**
+ * @file
+ * @brief Rotary level encoder.
+ */
 #pragma once
-
-/** @brief Rotary level encoders. */
 
 #include <stdatomic.h>
 #include <stdint.h>
@@ -11,38 +13,27 @@
 
 /** @brief State of a level encoder. */
 struct level_encoder {
-  /** @brief Shared state variables. Level lives here. */
-  struct shared *shared;
-  /** @brief Encoder name for logging. */
-  char *name;
-  /** @brief GPIO input pins polled for encoder state. */
-  uint8_t sw_gpio, clk_gpio, dt_gpio;
-  /** @brief Number of quadrature transitions to consider "full on". */
-  uint16_t level_max;
-  /** @brief Push-button switch state. 1 when not pressed. 0 when pressed. */
-  uint8_t sw_value;
+  struct shared *shared;  ///< Shared state variables. Level lives here.
+  char *name;             ///< Encoder name for logging.
+  uint8_t sw_gpio;        ///< GPIO input pin: push switch.
+  uint8_t clk_gpio;       ///< GPIO input pin: quadrature A.
+  uint8_t dt_gpio;        ///< GPIO input pin: quadrature B.
+  uint16_t level_max;     ///< Number of quadrature transitions to consider "full on".
+  uint8_t sw_value;       ///< Push-button switch state. 0=pressed, 1=not.
 
   // Private.
-  /** @brief Last valid encoded level in quadrature ticks. */
-  uint16_t level;
-  /** @brief Saved callback for encoder position changes. */
-  void (*on_level_change)(struct level_encoder *);
-  /** @brief Saved callback for pushbutton press/release. */
-  void (*on_sw_change)(struct level_encoder *);
-  /** @brief Blink timer. Internal. */
-  StaticTimer_t timer_state[1];
-  /** @brief Blink timer handle. */
-  TimerHandle_t timer;
-  /** @brief Two bits storing the last encoder quadrature value. */
-  int32_t last_state;
+  uint16_t level;  ///< Last valid encoded level in quadrature ticks. Internal
+  void (*on_level_change)(struct level_encoder *);  ///< Encoder position change callback.
+  void (*on_sw_change)(struct level_encoder *);     ///< Pushbutton press/release callback.
+  StaticTimer_t timer_state[1];                     ///< Blink timer state. Internal.
+  TimerHandle_t timer;                              ///< Blink timer. Internal.
+  int32_t last_state;                               ///< Last encoder quadrature state. 2 bits.
 };
 
 /**
  * @brief Initializes level encoder state.
  *
- * Sets up GPIO input pins.
- *
- * Starts with the shared level value, which is assumed to be initialized.
+ * Uses the shared level value, which must be already initialized.
  *
  * @param encoder Encoder state to initialize.
  * @param name Name of the encoder.
@@ -55,7 +46,6 @@ struct level_encoder {
  *                        or NULL to disable the callback.
  * @param on_sw_change Callback invoked when the switch value changes, or NULL
  *                     to disable the callback.
- * @param data Application-defined data available through @p encoder.
  */
 void initialize_level_encoder(struct level_encoder *encoder, char *name, uint8_t sw_gpio,
                               uint8_t clk_gpio, uint8_t dt_gpio, uint16_t level_max,
@@ -63,16 +53,13 @@ void initialize_level_encoder(struct level_encoder *encoder, char *name, uint8_t
                               void (*on_level_change)(struct level_encoder *),
                               void (*on_sw_change)(struct level_encoder *));
 
-/**
- * @brief Starts polling of the encoder for level changes.
- *
- * Thread safe.
- */
+/** @brief Starts polling of the encoder for level changes. Thread safe. */
 void start_level_encoder_sense(struct level_encoder *encoder);
 
-/** Sets encoder level in mils, both shared and internal. Thread safe. */
+/** @brief Sets encoder level in mils, both shared and internal. Thread safe. */
 void set_level_mils(struct level_encoder *encoder, uint16_t level_mils);
 
+/** @brief Gets encoder level in mils. Thread safe. */
 inline uint16_t get_level_mils(struct level_encoder *encoder) {
   return get_shared_level_mils(encoder->shared);
 }

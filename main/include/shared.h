@@ -1,6 +1,8 @@
+/**
+ * @file
+ * @brief Multi-thread shared and/or checkpointed state.
+ */
 #pragma once
-
-/** @brief Shared state touched by different threads. */
 
 #include <stdatomic.h>
 #include <stdint.h>
@@ -9,29 +11,27 @@
 #include "freertos/semphr.h"
 #include "nvs_flash.h"
 
-#define CHECKPOINT_TASK_STACK_SIZE 2048
+#define CHECKPOINT_TASK_STACK_SIZE 2048  ///< Size of the checkpoint task's stack.
 
+/** @brief Persistent checkpoint. */
 struct checkpoint {
-  uint32_t sequence;    // Broadcast sequence number.
-  uint16_t level_mils;  // Dimming level in [0..1024].
+  uint32_t sequence;    ///< Broadcast sequence number.
+  uint16_t level_mils;  ///< Dimming level in [0..1024].
 };
 
 /** @brief State shared among threads and/or checkpointed to persistent store. */
 struct shared {
-  /** Shared data */
-  _Atomic uint32_t sequence;    // Broadcast sequence number.
-  _Atomic uint16_t level_mils;  // Dimming level in [0..1024].
+  // Shared data.
+  _Atomic uint32_t sequence;    ///< Broadcast sequence number.
+  _Atomic uint16_t level_mils;  ///< Dimming level in [0..1024].
 
-  /** The last data saved as a checkpoint. */
-  struct checkpoint checkpoint[1];
+  struct checkpoint checkpoint[1];  ///< The last data saved as a checkpoint.
 
-  // Non-volatile storage.
-  nvs_handle_t nvs;
+  nvs_handle_t nvs;  ///< Non-volatile storage.
 
-  // Checkpoint manager task.
-  TaskHandle_t checkpoint_task;
-  StaticTask_t checkpoint_task_state[1];
-  StackType_t checkpoint_task_stack[CHECKPOINT_TASK_STACK_SIZE];
+  TaskHandle_t checkpoint_task;           ///< Checkpoint manager task.
+  StaticTask_t checkpoint_task_state[1];  ///< Checkpoint manager task state.
+  StackType_t checkpoint_task_stack[CHECKPOINT_TASK_STACK_SIZE];  ///< Checkpoint manager stack.
 };
 
 /** @brief Initializes at last checkpoint, if any, and starts the checkpoint task. */

@@ -1,0 +1,70 @@
+\doxysection{level\+\_\+encoder Struct Reference}
+\hypertarget{structlevel__encoder}{}\label{structlevel__encoder}\index{level\_encoder@{level\_encoder}}
+
+
+State of a level encoder.  
+
+
+
+
+{\ttfamily \#include $<$encoder.\+h$>$}
+
+
+
+Collaboration diagram for level\+\_\+encoder\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=180pt]{structlevel__encoder__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structlevel__encoder_a0c4b3c8715ea5d9baa5c6df1d84f5144}\label{structlevel__encoder_a0c4b3c8715ea5d9baa5c6df1d84f5144} 
+struct \mbox{\hyperlink{structshared}{shared}} \texorpdfstring{$\ast$}{*} {\bfseries shared}
+\begin{DoxyCompactList}\small\item\em Shared state variables. Level lives here. \end{DoxyCompactList}\item 
+\Hypertarget{structlevel__encoder_a51d4d44244328f9ff9fb40eee2478365}\label{structlevel__encoder_a51d4d44244328f9ff9fb40eee2478365} 
+char \texorpdfstring{$\ast$}{*} {\bfseries name}
+\begin{DoxyCompactList}\small\item\em Encoder name for logging. \end{DoxyCompactList}\item 
+\Hypertarget{structlevel__encoder_a16ff1267b245dd81c42b5aab69bd006b}\label{structlevel__encoder_a16ff1267b245dd81c42b5aab69bd006b} 
+uint8\+\_\+t {\bfseries sw\+\_\+gpio}
+\begin{DoxyCompactList}\small\item\em GPIO input pin\+: push switch. \end{DoxyCompactList}\item 
+\Hypertarget{structlevel__encoder_a85e1396eb0bc6e92b02a9cc8000d2ff2}\label{structlevel__encoder_a85e1396eb0bc6e92b02a9cc8000d2ff2} 
+uint8\+\_\+t {\bfseries clk\+\_\+gpio}
+\begin{DoxyCompactList}\small\item\em GPIO input pin\+: quadrature A. \end{DoxyCompactList}\item 
+\Hypertarget{structlevel__encoder_ab56216f1a928289cfae651cd4c588a83}\label{structlevel__encoder_ab56216f1a928289cfae651cd4c588a83} 
+uint8\+\_\+t {\bfseries dt\+\_\+gpio}
+\begin{DoxyCompactList}\small\item\em GPIO input pin\+: quadrature B. \end{DoxyCompactList}\item 
+\Hypertarget{structlevel__encoder_ad7399f131808ec9d94356568430e221b}\label{structlevel__encoder_ad7399f131808ec9d94356568430e221b} 
+uint16\+\_\+t {\bfseries level\+\_\+max}
+\begin{DoxyCompactList}\small\item\em Number of quadrature transitions to consider "{}full on"{}. \end{DoxyCompactList}\item 
+\Hypertarget{structlevel__encoder_a746544dbf0c1524b5711981b34ac4dcb}\label{structlevel__encoder_a746544dbf0c1524b5711981b34ac4dcb} 
+uint8\+\_\+t {\bfseries sw\+\_\+value}
+\begin{DoxyCompactList}\small\item\em Push-\/button switch state. 0=pressed, 1=not. \end{DoxyCompactList}\item 
+\Hypertarget{structlevel__encoder_a36ccde54f82db172394575ccf6d8fd68}\label{structlevel__encoder_a36ccde54f82db172394575ccf6d8fd68} 
+uint16\+\_\+t {\bfseries level}
+\begin{DoxyCompactList}\small\item\em Last valid encoded level in quadrature ticks. Internal. \end{DoxyCompactList}\item 
+\Hypertarget{structlevel__encoder_a73651f8f7ccce51e9bf1d49762fc3d3b}\label{structlevel__encoder_a73651f8f7ccce51e9bf1d49762fc3d3b} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries on\+\_\+level\+\_\+change} )(struct \mbox{\hyperlink{structlevel__encoder}{level\+\_\+encoder}} \texorpdfstring{$\ast$}{*})
+\begin{DoxyCompactList}\small\item\em Encoder position change callback. \end{DoxyCompactList}\item 
+\Hypertarget{structlevel__encoder_a2c97e5442dd05970aac83bb7aa5dae56}\label{structlevel__encoder_a2c97e5442dd05970aac83bb7aa5dae56} 
+void(\texorpdfstring{$\ast$}{*} {\bfseries on\+\_\+sw\+\_\+change} )(struct \mbox{\hyperlink{structlevel__encoder}{level\+\_\+encoder}} \texorpdfstring{$\ast$}{*})
+\begin{DoxyCompactList}\small\item\em Pushbutton press/release callback. \end{DoxyCompactList}\item 
+\Hypertarget{structlevel__encoder_a9229fbbef72b2281b884c07db2b6ab16}\label{structlevel__encoder_a9229fbbef72b2281b884c07db2b6ab16} 
+Static\+Timer\+\_\+t {\bfseries timer\+\_\+state} \mbox{[}1\mbox{]}
+\begin{DoxyCompactList}\small\item\em Blink timer state. Internal. \end{DoxyCompactList}\item 
+\Hypertarget{structlevel__encoder_ae8b42128571ff362396c9c95d1c3d199}\label{structlevel__encoder_ae8b42128571ff362396c9c95d1c3d199} 
+Timer\+Handle\+\_\+t {\bfseries timer}
+\begin{DoxyCompactList}\small\item\em Blink timer. Internal. \end{DoxyCompactList}\item 
+\Hypertarget{structlevel__encoder_a59631b5ee88450472d3ce6884f815b07}\label{structlevel__encoder_a59631b5ee88450472d3ce6884f815b07} 
+int32\+\_\+t {\bfseries last\+\_\+state}
+\begin{DoxyCompactList}\small\item\em Last encoder quadrature state. 2 bits. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+State of a level encoder. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/gene/\+Work/dimmer/main/include/\mbox{\hyperlink{encoder_8h}{encoder.\+h}}\end{DoxyCompactItemize}

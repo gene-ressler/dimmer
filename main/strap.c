@@ -1,3 +1,7 @@
+/**
+ * @file
+ * @brief Configuration strap implementation.
+ */
 #include "strap.h"
 
 #include "esp_log.h"

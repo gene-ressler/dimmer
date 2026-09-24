@@ -1,0 +1,86 @@
+\doxysection{/home/gene/\+Work/dimmer/main/include/encoder.h File Reference}
+\hypertarget{encoder_8h}{}\label{encoder_8h}\index{/home/gene/Work/dimmer/main/include/encoder.h@{/home/gene/Work/dimmer/main/include/encoder.h}}
+
+
+Rotary level encoder.  
+
+
+{\ttfamily \#include $<$stdatomic.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include "{}driver/gpio.\+h"{}}\newline
+{\ttfamily \#include "{}freertos/\+Free\+RTOS.\+h"{}}\newline
+{\ttfamily \#include "{}shared.\+h"{}}\newline
+Include dependency graph for encoder.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{encoder_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{encoder_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structlevel__encoder}{level\+\_\+encoder}}
+\begin{DoxyCompactList}\small\item\em State of a level encoder. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{encoder_8h_af341269adc3200b04f701f54d85abce7}{initialize\+\_\+level\+\_\+encoder}} (struct \mbox{\hyperlink{structlevel__encoder}{level\+\_\+encoder}} \texorpdfstring{$\ast$}{*}encoder, char \texorpdfstring{$\ast$}{*}name, uint8\+\_\+t sw\+\_\+gpio, uint8\+\_\+t clk\+\_\+gpio, uint8\+\_\+t dt\+\_\+gpio, uint16\+\_\+t level\+\_\+max, struct \mbox{\hyperlink{structshared}{shared}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structshared}{shared}}, void(\texorpdfstring{$\ast$}{*}on\+\_\+level\+\_\+change)(struct \mbox{\hyperlink{structlevel__encoder}{level\+\_\+encoder}} \texorpdfstring{$\ast$}{*}), void(\texorpdfstring{$\ast$}{*}on\+\_\+sw\+\_\+change)(struct \mbox{\hyperlink{structlevel__encoder}{level\+\_\+encoder}} \texorpdfstring{$\ast$}{*}))
+\begin{DoxyCompactList}\small\item\em Initializes level encoder state. \end{DoxyCompactList}\item 
+\Hypertarget{encoder_8h_a34d888082e1d0aa724e0df8871a4a41d}\label{encoder_8h_a34d888082e1d0aa724e0df8871a4a41d} 
+void {\bfseries start\+\_\+level\+\_\+encoder\+\_\+sense} (struct \mbox{\hyperlink{structlevel__encoder}{level\+\_\+encoder}} \texorpdfstring{$\ast$}{*}encoder)
+\begin{DoxyCompactList}\small\item\em Starts polling of the encoder for level changes. Thread safe. \end{DoxyCompactList}\item 
+\Hypertarget{encoder_8h_a67361596b5aeb01114d840d2c03e8585}\label{encoder_8h_a67361596b5aeb01114d840d2c03e8585} 
+void {\bfseries set\+\_\+level\+\_\+mils} (struct \mbox{\hyperlink{structlevel__encoder}{level\+\_\+encoder}} \texorpdfstring{$\ast$}{*}encoder, uint16\+\_\+t level\+\_\+mils)
+\begin{DoxyCompactList}\small\item\em Sets encoder level in mils, both shared and internal. Thread safe. \end{DoxyCompactList}\item 
+\Hypertarget{encoder_8h_a9e666012c564887b6dd5a119f1e17dcc}\label{encoder_8h_a9e666012c564887b6dd5a119f1e17dcc} 
+uint16\+\_\+t {\bfseries get\+\_\+level\+\_\+mils} (struct \mbox{\hyperlink{structlevel__encoder}{level\+\_\+encoder}} \texorpdfstring{$\ast$}{*}encoder)
+\begin{DoxyCompactList}\small\item\em Gets encoder level in mils. Thread safe. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Rotary level encoder. 
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{encoder_8h_af341269adc3200b04f701f54d85abce7}\label{encoder_8h_af341269adc3200b04f701f54d85abce7} 
+\index{encoder.h@{encoder.h}!initialize\_level\_encoder@{initialize\_level\_encoder}}
+\index{initialize\_level\_encoder@{initialize\_level\_encoder}!encoder.h@{encoder.h}}
+\doxysubsubsection{\texorpdfstring{initialize\_level\_encoder()}{initialize\_level\_encoder()}}
+{\footnotesize\ttfamily void initialize\+\_\+level\+\_\+encoder (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structlevel__encoder}{level\+\_\+encoder}} \texorpdfstring{$\ast$}{*}}]{encoder,  }\item[{char \texorpdfstring{$\ast$}{*}}]{name,  }\item[{uint8\+\_\+t}]{sw\+\_\+gpio,  }\item[{uint8\+\_\+t}]{clk\+\_\+gpio,  }\item[{uint8\+\_\+t}]{dt\+\_\+gpio,  }\item[{uint16\+\_\+t}]{level\+\_\+max,  }\item[{struct \mbox{\hyperlink{structshared}{shared}} \texorpdfstring{$\ast$}{*}}]{shared,  }\item[{void(\texorpdfstring{$\ast$}{*})(struct \mbox{\hyperlink{structlevel__encoder}{level\+\_\+encoder}} \texorpdfstring{$\ast$}{*})}]{on\+\_\+level\+\_\+change,  }\item[{void(\texorpdfstring{$\ast$}{*})(struct \mbox{\hyperlink{structlevel__encoder}{level\+\_\+encoder}} \texorpdfstring{$\ast$}{*})}]{on\+\_\+sw\+\_\+change }\end{DoxyParamCaption})}
+
+
+
+Initializes level encoder state. 
+
+Uses the shared level value, which must be already initialized.
+
+
+\begin{DoxyParams}{Parameters}
+{\em encoder} & Encoder state to initialize. \\
+\hline
+{\em name} & Name of the encoder. \\
+\hline
+{\em sw\+\_\+gpio} & Encoder push-\/button switch GPIO pin. \\
+\hline
+{\em clk\+\_\+gpio} & Encoder CLK GPIO pin. Half of quadrature signal. \\
+\hline
+{\em dt\+\_\+gpio} & Encoder DT GPIO pin. Half of quadrature signal. \\
+\hline
+{\em level\+\_\+max} & Maximum internal level value in quadrature ticks. \\
+\hline
+{\em shared} & Shared state variable holding encoder level. \\
+\hline
+{\em on\+\_\+level\+\_\+change} & Callback invoked when the encoder level changes, or NULL to disable the callback. \\
+\hline
+{\em on\+\_\+sw\+\_\+change} & Callback invoked when the switch value changes, or NULL to disable the callback. \\
+\hline
+\end{DoxyParams}

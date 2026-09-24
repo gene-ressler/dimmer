@@ -1,20 +1,17 @@
+/**
+ * @file
+ * @brief PWM output.
+ */
 #pragma once
-
-/** @brief PWM outputs. */
-
-#include <stdint.h>
 
 #include "driver/gpio.h"
 #include "freertos/FreeRTOS.h"
 
 /** @brief Data for a GPIO pin serving as a PWM output. */
 struct pwm {
-  /** @brief Name of the PWM output for logging. */
-  char *name;
-  /** @brief GPIO pin for PWM output. */
-  gpio_num_t gpio;
-  /** @brief Raw internal duty cycle. */
-  uint16_t duty;
+  char *name;       ///< Name of the PWM output for logging. */
+  gpio_num_t gpio;  ///< GPIO pin for PWM output. */
+  uint16_t duty;    ///< Raw internal duty cycle. */
 };
 
 /** @brief Initializes the timer needed for all PWMs. */

@@ -1,0 +1,47 @@
+\doxysection{encoder.\+h}
+\hypertarget{encoder_8h_source}{}\label{encoder_8h_source}\index{/home/gene/Work/dimmer/main/include/encoder.h@{/home/gene/Work/dimmer/main/include/encoder.h}}
+\mbox{\hyperlink{encoder_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <stdatomic.h>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}driver/gpio.h"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}freertos/FreeRTOS.h"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{shared_8h}{shared.h}}"{}}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structlevel__encoder}{level\_encoder}}\ \{}
+\DoxyCodeLine{00016\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structshared}{shared}}\ *\mbox{\hyperlink{structlevel__encoder_a0c4b3c8715ea5d9baa5c6df1d84f5144}{shared}};\ \ }
+\DoxyCodeLine{00017\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structlevel__encoder_a51d4d44244328f9ff9fb40eee2478365}{name}};\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00018\ \ \ uint8\_t\ \mbox{\hyperlink{structlevel__encoder_a16ff1267b245dd81c42b5aab69bd006b}{sw\_gpio}};\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00019\ \ \ uint8\_t\ \mbox{\hyperlink{structlevel__encoder_a85e1396eb0bc6e92b02a9cc8000d2ff2}{clk\_gpio}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{00020\ \ \ uint8\_t\ \mbox{\hyperlink{structlevel__encoder_ab56216f1a928289cfae651cd4c588a83}{dt\_gpio}};\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00021\ \ \ uint16\_t\ \mbox{\hyperlink{structlevel__encoder_ad7399f131808ec9d94356568430e221b}{level\_max}};\ \ \ \ \ }
+\DoxyCodeLine{00022\ \ \ uint8\_t\ \mbox{\hyperlink{structlevel__encoder_a746544dbf0c1524b5711981b34ac4dcb}{sw\_value}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \textcolor{comment}{//\ Private.}}
+\DoxyCodeLine{00025\ \ \ uint16\_t\ \mbox{\hyperlink{structlevel__encoder_a36ccde54f82db172394575ccf6d8fd68}{level}};\ \ }
+\DoxyCodeLine{00026\ \ \ void\ (*\mbox{\hyperlink{structlevel__encoder_a73651f8f7ccce51e9bf1d49762fc3d3b}{on\_level\_change}})(\textcolor{keyword}{struct\ }\mbox{\hyperlink{structlevel__encoder}{level\_encoder}}\ *);\ \ }
+\DoxyCodeLine{00027\ \ \ void\ (*\mbox{\hyperlink{structlevel__encoder_a2c97e5442dd05970aac83bb7aa5dae56}{on\_sw\_change}})(\textcolor{keyword}{struct\ }\mbox{\hyperlink{structlevel__encoder}{level\_encoder}}\ *);\ \ \ \ \ }
+\DoxyCodeLine{00028\ \ \ StaticTimer\_t\ \mbox{\hyperlink{structlevel__encoder_a9229fbbef72b2281b884c07db2b6ab16}{timer\_state}}[1];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00029\ \ \ TimerHandle\_t\ \mbox{\hyperlink{structlevel__encoder_ae8b42128571ff362396c9c95d1c3d199}{timer}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00030\ \ \ int32\_t\ \mbox{\hyperlink{structlevel__encoder_a59631b5ee88450472d3ce6884f815b07}{last\_state}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00031\ \};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00050\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{encoder_8h_af341269adc3200b04f701f54d85abce7}{initialize\_level\_encoder}}(\textcolor{keyword}{struct}\ \mbox{\hyperlink{structlevel__encoder}{level\_encoder}}\ *encoder,\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structlevel__encoder_a51d4d44244328f9ff9fb40eee2478365}{name}},\ uint8\_t\ \mbox{\hyperlink{structlevel__encoder_a16ff1267b245dd81c42b5aab69bd006b}{sw\_gpio}},}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint8\_t\ \mbox{\hyperlink{structlevel__encoder_a85e1396eb0bc6e92b02a9cc8000d2ff2}{clk\_gpio}},\ uint8\_t\ \mbox{\hyperlink{structlevel__encoder_ab56216f1a928289cfae651cd4c588a83}{dt\_gpio}},\ uint16\_t\ \mbox{\hyperlink{structlevel__encoder_ad7399f131808ec9d94356568430e221b}{level\_max}},}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}\ \mbox{\hyperlink{structshared}{shared}}\ *\mbox{\hyperlink{structshared}{shared}},}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ (*\mbox{\hyperlink{structlevel__encoder_a73651f8f7ccce51e9bf1d49762fc3d3b}{on\_level\_change}})(\textcolor{keyword}{struct}\ \mbox{\hyperlink{structlevel__encoder}{level\_encoder}}\ *),}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ (*\mbox{\hyperlink{structlevel__encoder_a2c97e5442dd05970aac83bb7aa5dae56}{on\_sw\_change}})(\textcolor{keyword}{struct}\ \mbox{\hyperlink{structlevel__encoder}{level\_encoder}}\ *));}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00057\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{encoder_8h_a34d888082e1d0aa724e0df8871a4a41d}{start\_level\_encoder\_sense}}(\textcolor{keyword}{struct}\ \mbox{\hyperlink{structlevel__encoder}{level\_encoder}}\ *encoder);}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00060\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{encoder_8h_a67361596b5aeb01114d840d2c03e8585}{set\_level\_mils}}(\textcolor{keyword}{struct}\ \mbox{\hyperlink{structlevel__encoder}{level\_encoder}}\ *encoder,\ uint16\_t\ level\_mils);}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00063\ \textcolor{keyword}{inline}\ uint16\_t\ \mbox{\hyperlink{encoder_8h_a9e666012c564887b6dd5a119f1e17dcc}{get\_level\_mils}}(\textcolor{keyword}{struct}\ \mbox{\hyperlink{structlevel__encoder}{level\_encoder}}\ *encoder)\ \{}
+\DoxyCodeLine{00064\ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{shared_8h_a7d3384b52cb1e18e889bfd850479f143}{get\_shared\_level\_mils}}(encoder-\/>\mbox{\hyperlink{structlevel__encoder_a0c4b3c8715ea5d9baa5c6df1d84f5144}{shared}});}
+\DoxyCodeLine{00065\ \}}
+
+\end{DoxyCode}

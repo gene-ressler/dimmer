@@ -1,6 +1,8 @@
+/**
+ * @file
+ * @brief Configuration strap.
+ */
 #pragma once
-
-/** @brief Configuration straps. */
 
 #include <stdint.h>
 
@@ -8,13 +10,11 @@
 
 /** @brief Data for a strap. */
 struct strap {
-  /** @brief Name of the strap for logging. */
-  char *name;
-  /** @brief Value of the strap at initialization time. */
-  uint8_t value;
+  char *name;     ///< Name of the strap for logging.
+  uint8_t value;  ///< Value of the strap at initialization time.
 };
 
-/** Returns true iff a ground strap existed for the GPIO pin given at initialization. */
+/** @brief Returns true iff a ground strap existed for the given GPIO pin at initialization. */
 #define IS_STRAP_PRESENT(S) ((S)->value == 0)
 
 /**

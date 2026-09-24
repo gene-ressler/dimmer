@@ -1,6 +1,9 @@
+/**
+ * @file
+ * @brief Wifi broadcast and receive singleton implementation.
+ */
 #include "wifi.h"
 
-#include <assert.h>
 #include <stdatomic.h>
 #include <stdint.h>
 
@@ -15,59 +18,50 @@
 
 static const char tag[] = "wifi";
 
-void get_mac(uint8_t *mac, char *text) {
-  esp_read_mac(mac, ESP_MAC_WIFI_STA);
-  char *sep = "";
-  for (int32_t i = 0, p = 0; i < 6; ++i) {
-    p += sprintf(text + p, "%s%02x", sep, mac[i]);
-    sep = ":";
-  }
-}
-
 static const uint8_t broadcast_mac[ESP_NOW_ETH_ALEN] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
-#define WIFI_CHANNEL 3
-#define SEND_INTERVAL_MS 2000
-#define WIFI_TASK_STACK_SIZE 4096
+#define WIFI_CHANNEL 3             ///< Broadcast channel.
+#define SEND_INTERVAL_MS 2000      ///< Delay between repeated broadcasts.
+#define WIFI_TASK_STACK_SIZE 4096  ///< Wifi repeated send task stack size.
 
-#define PAYLOAD_HEADER_SIZE 22
+#define PAYLOAD_HEADER_SIZE 22  ///< Size of payload header (bytes).
+/** @brief ESP-NOW limit on user payload size. */
 #define MAX_PAYLOAD_DATA_SIZE (ESP_NOW_MAX_DATA_LEN - PAYLOAD_HEADER_SIZE)
+
+/** @brief Packed wifi payload wrapping the user's data. */
 #pragma pack(push, 1)
 struct wifi_payload {
-  // Start header
-  uint32_t sequence;
-  uint8_t hmac[16];
-  uint16_t data_len;
-  // End header
-  uint8_t data[MAX_PAYLOAD_DATA_SIZE];
+  // Start header.
+  uint32_t sequence;  ///< Broadcast sequence number.
+  uint8_t hmac[16];   ///< Secure hash based on payload contents.
+  uint16_t data_len;  ///< Actual user data size (bytes).
+  // End header.
+  uint8_t data[MAX_PAYLOAD_DATA_SIZE];  ///< User data buffer.
 };
 #pragma pack(pop)
 
 /** State of wifi connection. */
 static struct wifi_state {
-  // State of current repeated send.
-  uint32_t sequence;
-  uint8_t data[MAX_PAYLOAD_DATA_SIZE];
-  uint16_t len;
-  uint16_t repeat_count;
+  // Repeated send parameter block and mutex.
+  uint32_t sequence;                    ///< Repeated send parameter: broadcast sequence number.
+  uint8_t data[MAX_PAYLOAD_DATA_SIZE];  ///< Repeated send parameter: payload data
+  uint16_t len;                         ///< Repeated send parameter: payload data size.
+  uint16_t repeat_count;                ///< Repeated send parameter: repeats remaining.
+  SemaphoreHandle_t mutex;              ///< Mutex for repeated sends parameters.
+  StaticSemaphore_t mutex_state[1];     ///< Repeated send parameter mutex state.
 
-  // Mutex for repeated send info above.
-  SemaphoreHandle_t mutex;
-  StaticSemaphore_t mutex_state[1];
+  // Repeated send task info.
+  TaskHandle_t repeat_task;                             ///< Repeated send task.
+  StaticTask_t repeat_task_state[1];                    ///< Repeated send task state.
+  StackType_t repeat_task_stack[WIFI_TASK_STACK_SIZE];  ///< Repeated send task stack.
 
-  // Task to run the repeat lock.
-  TaskHandle_t repeat_task;
-  StaticTask_t repeat_task_state[1];
-  StackType_t repeat_task_stack[WIFI_TASK_STACK_SIZE];
+  struct shared *shared;  ///< Checkpointed state containing current sequence number.
 
-  /** @brief Shared atomic variables. Contains sequence. */
-  struct shared *shared;
-
-  // Callback for handling received data.
-  void (*on_receive)(const void *data, uint16_t len);
+  void (*on_receive)(const void *data, uint16_t len);  //< Callback for handling received data.
 } wifi_state[1];
 
-static void wifi_send_callback(const esp_now_send_info_t *, esp_now_send_status_t status) {
+/** @brief Checks wifi broadcast error status. */
+static void on_wifi_send(const esp_now_send_info_t *, esp_now_send_status_t status) {
   ESP_ERROR_CHECK_WITHOUT_ABORT(status);
 }
 
@@ -104,8 +98,12 @@ exit_no_abort:
 }
 
 /** @brief Unwraps a received payload, verifies it, and invokes the user's callback. */
-static void wifi_recv_callback(const esp_now_recv_info_t *info, const uint8_t *data, int len) {
-  assert(PAYLOAD_HEADER_SIZE <= len && len <= UINT16_MAX);     // sanity check
+static void on_wifi_receive(const esp_now_recv_info_t *info, const uint8_t *data, int len) {
+  if (len < PAYLOAD_HEADER_SIZE || len > ESP_NOW_MAX_DATA_LEN) {
+    // Later processing would access non-existent data or memory.
+    ESP_LOGE(tag, "rec'v bad len=%u", len);
+    return;
+  }
   struct wifi_payload *payload = (struct wifi_payload *)data;  // okay, as data is 32-bit aligned
 
   // Manage sequence numbers.
@@ -189,11 +187,6 @@ static void repeat_task(void *parameters) {
   }
 }
 
-/**
- * @brief Configures wifi as a singleton.
- *
- * Calls after the first do nothing to the wifi hardware.
- */
 void initialize_wifi(struct shared *shared, void (*on_receive)(const void *data, uint16_t len)) {
   // Non-threadsafe assignments are okay here.
   wifi_state->shared = shared;
@@ -227,8 +220,8 @@ void initialize_wifi(struct shared *shared, void (*on_receive)(const void *data,
   ESP_ERROR_CHECK(esp_now_init());
 
   // Register callbacks
-  ESP_ERROR_CHECK(esp_now_register_send_cb(wifi_send_callback));
-  ESP_ERROR_CHECK(esp_now_register_recv_cb(wifi_recv_callback));
+  ESP_ERROR_CHECK(esp_now_register_send_cb(on_wifi_send));
+  ESP_ERROR_CHECK(esp_now_register_recv_cb(on_wifi_receive));
 
   // Broadcast peer
   esp_now_peer_info_t peer_info = {0};

@@ -1,0 +1,59 @@
+\doxysection{led Struct Reference}
+\hypertarget{structled}{}\label{structled}\index{led@{led}}
+
+
+Data for a timer-\/driven flashing LED.  
+
+
+
+
+{\ttfamily \#include $<$led.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structled_ab3dda6fdb1d16383723a0570d567a2b5}\label{structled_ab3dda6fdb1d16383723a0570d567a2b5} 
+char \texorpdfstring{$\ast$}{*} {\bfseries name}
+\begin{DoxyCompactList}\small\item\em Name of the LED for logging. \end{DoxyCompactList}\item 
+\Hypertarget{structled_a3c9d7d41d453d905397e2fb5be2da7f3}\label{structled_a3c9d7d41d453d905397e2fb5be2da7f3} 
+gpio\+\_\+num\+\_\+t {\bfseries gpio}
+\begin{DoxyCompactList}\small\item\em GPIO pin driving the LED. \end{DoxyCompactList}\item 
+\Hypertarget{structled_aabb23192ee98f4f603c0f46cbbe2f42b}\label{structled_aabb23192ee98f4f603c0f46cbbe2f42b} 
+Static\+Timer\+\_\+t {\bfseries timer\+\_\+state} \mbox{[}1\mbox{]}
+\begin{DoxyCompactList}\small\item\em Blink timer state. \end{DoxyCompactList}\item 
+\Hypertarget{structled_affd177c1eebb73bee99faf1a5b583971}\label{structled_affd177c1eebb73bee99faf1a5b583971} 
+Timer\+Handle\+\_\+t {\bfseries timer}
+\begin{DoxyCompactList}\small\item\em Blink timer handle. \end{DoxyCompactList}\item 
+uint16\+\_\+t \mbox{\hyperlink{structled_a614cf261ad4f19ea1ae5563c03baf906}{led\+\_\+state}}
+\begin{DoxyCompactList}\small\item\em Index connoting which flashing phase the led is in. \end{DoxyCompactList}\item 
+\Hypertarget{structled_a593d2a207263a6af08035f6fbad8a6c9}\label{structled_a593d2a207263a6af08035f6fbad8a6c9} 
+uint8\+\_\+t {\bfseries last\+\_\+led\+\_\+state}
+\begin{DoxyCompactList}\small\item\em Two times desired\+\_\+flash\+\_\+count. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Data for a timer-\/driven flashing LED. 
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structled_a614cf261ad4f19ea1ae5563c03baf906}\label{structled_a614cf261ad4f19ea1ae5563c03baf906} 
+\index{led@{led}!led\_state@{led\_state}}
+\index{led\_state@{led\_state}!led@{led}}
+\doxysubsubsection{\texorpdfstring{led\_state}{led\_state}}
+{\footnotesize\ttfamily uint16\+\_\+t led\+::led\+\_\+state}
+
+
+
+Index connoting which flashing phase the led is in. 
+
+States\+:
+\begin{DoxyItemize}
+\item 0 -\/ long off
+\item 1 -\/ first on
+\item 2 -\/ first short off
+\item ...
+\item last\+\_\+led\+\_\+state-\/1 -\/ last on (followed by 0 = long off) 
+\end{DoxyItemize}
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/gene/\+Work/dimmer/main/include/\mbox{\hyperlink{led_8h}{led.\+h}}\end{DoxyCompactItemize}

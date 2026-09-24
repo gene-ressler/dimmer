@@ -1,3 +1,5 @@
+\mainpage Wireless 0-10 volt dimmer
+
 # Design and implementation notes
 
 This design is for the case of 0-10 volt dimmable fixtures controlled by multiple switches replacing

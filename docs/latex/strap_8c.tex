@@ -1,0 +1,40 @@
+\doxysection{/home/gene/\+Work/dimmer/main/strap.c File Reference}
+\hypertarget{strap_8c}{}\label{strap_8c}\index{/home/gene/Work/dimmer/main/strap.c@{/home/gene/Work/dimmer/main/strap.c}}
+
+
+Configuration strap implementation.  
+
+
+{\ttfamily \#include "{}strap.\+h"{}}\newline
+{\ttfamily \#include "{}esp\+\_\+log.\+h"{}}\newline
+Include dependency graph for strap.\+c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=257pt]{strap_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{strap_8c_a27858ad74a85a6324f007fe3d7a1d524}{initialize\+\_\+strap}} (struct \mbox{\hyperlink{structstrap}{strap}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structstrap}{strap}}, char \texorpdfstring{$\ast$}{*}name, gpio\+\_\+num\+\_\+t gpio)
+\begin{DoxyCompactList}\small\item\em Initializes and polls the value of strap. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Configuration strap implementation. 
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{strap_8c_a27858ad74a85a6324f007fe3d7a1d524}\label{strap_8c_a27858ad74a85a6324f007fe3d7a1d524} 
+\index{strap.c@{strap.c}!initialize\_strap@{initialize\_strap}}
+\index{initialize\_strap@{initialize\_strap}!strap.c@{strap.c}}
+\doxysubsubsection{\texorpdfstring{initialize\_strap()}{initialize\_strap()}}
+{\footnotesize\ttfamily void initialize\+\_\+strap (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structstrap}{strap}} \texorpdfstring{$\ast$}{*}}]{strap,  }\item[{char \texorpdfstring{$\ast$}{*}}]{name,  }\item[{gpio\+\_\+num\+\_\+t}]{gpio }\end{DoxyParamCaption})}
+
+
+
+Initializes and polls the value of strap. 
+
+Sets up the strap GPIO input pin. It is pulled-\/up to HI (1) when no strap is present. It has value LO (0) only when strapped to ground. 

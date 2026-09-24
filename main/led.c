@@ -1,3 +1,7 @@
+/**
+ * @file
+ * @brief Variable count flashing LED implementation.
+ */
 #include "led.h"
 
 #include "esp_log.h"
@@ -17,16 +21,17 @@ void initialize_led(struct led *led, char *name, gpio_num_t gpio) {
   gpio_config(config);
 }
 
-#define LED_ON_MS 50
-#define LED_SHORT_OFF_MS 300
-#define LED_LONG_OFF_MS 1000
+#define LED_ON_MS 50          ///< LED flash duration.
+#define LED_SHORT_OFF_MS 300  ///< LED off duration between flashes.
+#define LED_LONG_OFF_MS 1000  ///< LED off duration between flash sequences.
 
-static void led_timer_callback(TimerHandle_t timer) {
+/** @brief Handles a timer expiration with flash state updates. */
+static void on_led_timer_expiry(TimerHandle_t timer) {
   struct led *led = pvTimerGetTimerID(timer);
   // Turn on LED if new state value is odd.
   uint8_t led_on_state = ++led->led_state & 1;
   TickType_t period = led_on_state ? LED_ON_MS : LED_SHORT_OFF_MS;
-  // Wrap LED state if last blink was just completed.
+  // Exception: Wrap if last blink was just completed.
   if (led->led_state == led->last_led_state) {
     led->led_state = 0;
     period = LED_LONG_OFF_MS;
@@ -53,10 +58,10 @@ void set_led_flash_count(struct led *led, uint8_t count) {
     }
     return;
   }
-  // Set up timer for first flash.
+  // Set up timer for first flash, else adjust the period.
   if (!led->timer) {
     led->timer = xTimerCreateStatic(led->name, pdMS_TO_TICKS(LED_LONG_OFF_MS), pdFALSE, led,
-                                    led_timer_callback, led->timer_state);
+                                    on_led_timer_expiry, led->timer_state);
     xTimerStart(led->timer, 0);
   } else {
     xTimerChangePeriod(led->timer, pdMS_TO_TICKS(LED_LONG_OFF_MS), 0);

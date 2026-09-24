@@ -1,0 +1,23 @@
+\doxysection{pwm.\+h}
+\hypertarget{pwm_8h_source}{}\label{pwm_8h_source}\index{/home/gene/Work/dimmer/main/include/pwm.h@{/home/gene/Work/dimmer/main/include/pwm.h}}
+\mbox{\hyperlink{pwm_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}driver/gpio.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}freertos/FreeRTOS.h"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structpwm}{pwm}}\ \{}
+\DoxyCodeLine{00012\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structpwm_a53243e3e276ad4488a8d637b915d5e09}{name}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{00013\ \ \ gpio\_num\_t\ \mbox{\hyperlink{structpwm_ad12e4f964571a63cedd04c34a82cc4f4}{gpio}};\ \ }
+\DoxyCodeLine{00014\ \ \ uint16\_t\ \mbox{\hyperlink{structpwm_a54f3712b4bac6e35ed0e67aec55d2109}{duty}};\ \ \ \ }
+\DoxyCodeLine{00015\ \};}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00018\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pwm_8h_aff5b65aaa4f0cf5ace17aac1050cb801}{initialize\_pwm\_timer}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00030\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pwm_8h_ace748cce63627dcf59bc2bafa0d82bf4}{initialize\_pwm}}(\textcolor{keyword}{struct}\ \mbox{\hyperlink{structpwm}{pwm}}\ *\mbox{\hyperlink{structpwm}{pwm}},\ \textcolor{keywordtype}{char}\ *name,\ gpio\_num\_t\ gpio,\ uint16\_t\ init\_duty\_mils);}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00038\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pwm_8h_a89adbd64346559ce2e9ede4e963f099d}{set\_pwm\_duty\_mils}}(\textcolor{keyword}{struct}\ \mbox{\hyperlink{structpwm}{pwm}}\ *\mbox{\hyperlink{structpwm}{pwm}},\ uint16\_t\ duty\_mils);}
+
+\end{DoxyCode}

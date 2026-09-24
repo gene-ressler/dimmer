@@ -1,0 +1,83 @@
+\doxysection{/home/gene/\+Work/dimmer/main/encoder.c File Reference}
+\hypertarget{encoder_8c}{}\label{encoder_8c}\index{/home/gene/Work/dimmer/main/encoder.c@{/home/gene/Work/dimmer/main/encoder.c}}
+
+
+Rotary level encoder implementation.  
+
+
+{\ttfamily \#include "{}encoder.\+h"{}}\newline
+{\ttfamily \#include "{}esp\+\_\+log.\+h"{}}\newline
+Include dependency graph for encoder.\+c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{encoder_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{encoder_8c_ad11b785a3f263f73f9cf212091ad5030}\label{encoder_8c_ad11b785a3f263f73f9cf212091ad5030} 
+\#define {\bfseries LEVEL\+\_\+\+POLL\+\_\+\+MS}~5
+\begin{DoxyCompactList}\small\item\em Polling interval (millis). \end{DoxyCompactList}\item 
+\Hypertarget{encoder_8c_a0e0514fdf1b45ea9972b20bde30108b0}\label{encoder_8c_a0e0514fdf1b45ea9972b20bde30108b0} 
+\#define {\bfseries TO\+\_\+\+LEVEL\+\_\+\+MILS}(E,  L)~(1024 \texorpdfstring{$\ast$}{*} (int32\+\_\+t)(L) / (E)-\/$>$level\+\_\+max)
+\begin{DoxyCompactList}\small\item\em Converts raw level to mils with 32-\/bit signed arithmetic. \end{DoxyCompactList}\item 
+\Hypertarget{encoder_8c_a2048a20d0c20102349edcdcb9e21da59}\label{encoder_8c_a2048a20d0c20102349edcdcb9e21da59} 
+\#define {\bfseries TO\+\_\+\+RAW\+\_\+\+LEVEL}(E,  M)~((E)-\/$>$level\+\_\+max \texorpdfstring{$\ast$}{*} (int32\+\_\+t)(M) / 1024)
+\begin{DoxyCompactList}\small\item\em Converts mils to a raw level with 32-\/bit signed arithmetic. \end{DoxyCompactList}\item 
+\Hypertarget{encoder_8c_aa84bb2b41ecf44acce85e3e28157cdc8}\label{encoder_8c_aa84bb2b41ecf44acce85e3e28157cdc8} 
+\#define {\bfseries B}(N)~(1ULL $<$$<$ (N))
+\begin{DoxyCompactList}\small\item\em Returns a 64-\/bit mask with an N\textquotesingle{}th bit of 1. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{encoder_8c_af341269adc3200b04f701f54d85abce7}{initialize\+\_\+level\+\_\+encoder}} (struct \mbox{\hyperlink{structlevel__encoder}{level\+\_\+encoder}} \texorpdfstring{$\ast$}{*}encoder, char \texorpdfstring{$\ast$}{*}name, uint8\+\_\+t sw\+\_\+gpio, uint8\+\_\+t clk\+\_\+gpio, uint8\+\_\+t dt\+\_\+gpio, uint16\+\_\+t level\+\_\+max, struct \mbox{\hyperlink{structshared}{shared}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structshared}{shared}}, void(\texorpdfstring{$\ast$}{*}on\+\_\+level\+\_\+change)(struct \mbox{\hyperlink{structlevel__encoder}{level\+\_\+encoder}} \texorpdfstring{$\ast$}{*}), void(\texorpdfstring{$\ast$}{*}on\+\_\+sw\+\_\+change)(struct \mbox{\hyperlink{structlevel__encoder}{level\+\_\+encoder}} \texorpdfstring{$\ast$}{*}))
+\begin{DoxyCompactList}\small\item\em Initializes level encoder state. \end{DoxyCompactList}\item 
+\Hypertarget{encoder_8c_a67361596b5aeb01114d840d2c03e8585}\label{encoder_8c_a67361596b5aeb01114d840d2c03e8585} 
+void {\bfseries set\+\_\+level\+\_\+mils} (struct \mbox{\hyperlink{structlevel__encoder}{level\+\_\+encoder}} \texorpdfstring{$\ast$}{*}encoder, uint16\+\_\+t level\+\_\+mils)
+\begin{DoxyCompactList}\small\item\em Sets encoder level in mils, both shared and internal. Thread safe. \end{DoxyCompactList}\item 
+\Hypertarget{encoder_8c_a34d888082e1d0aa724e0df8871a4a41d}\label{encoder_8c_a34d888082e1d0aa724e0df8871a4a41d} 
+void {\bfseries start\+\_\+level\+\_\+encoder\+\_\+sense} (struct \mbox{\hyperlink{structlevel__encoder}{level\+\_\+encoder}} \texorpdfstring{$\ast$}{*}encoder)
+\begin{DoxyCompactList}\small\item\em Starts polling of the encoder for level changes. Thread safe. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Rotary level encoder implementation. 
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{encoder_8c_af341269adc3200b04f701f54d85abce7}\label{encoder_8c_af341269adc3200b04f701f54d85abce7} 
+\index{encoder.c@{encoder.c}!initialize\_level\_encoder@{initialize\_level\_encoder}}
+\index{initialize\_level\_encoder@{initialize\_level\_encoder}!encoder.c@{encoder.c}}
+\doxysubsubsection{\texorpdfstring{initialize\_level\_encoder()}{initialize\_level\_encoder()}}
+{\footnotesize\ttfamily void initialize\+\_\+level\+\_\+encoder (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structlevel__encoder}{level\+\_\+encoder}} \texorpdfstring{$\ast$}{*}}]{encoder,  }\item[{char \texorpdfstring{$\ast$}{*}}]{name,  }\item[{uint8\+\_\+t}]{sw\+\_\+gpio,  }\item[{uint8\+\_\+t}]{clk\+\_\+gpio,  }\item[{uint8\+\_\+t}]{dt\+\_\+gpio,  }\item[{uint16\+\_\+t}]{level\+\_\+max,  }\item[{struct \mbox{\hyperlink{structshared}{shared}} \texorpdfstring{$\ast$}{*}}]{shared,  }\item[{void(\texorpdfstring{$\ast$}{*})(struct \mbox{\hyperlink{structlevel__encoder}{level\+\_\+encoder}} \texorpdfstring{$\ast$}{*})}]{on\+\_\+level\+\_\+change,  }\item[{void(\texorpdfstring{$\ast$}{*})(struct \mbox{\hyperlink{structlevel__encoder}{level\+\_\+encoder}} \texorpdfstring{$\ast$}{*})}]{on\+\_\+sw\+\_\+change }\end{DoxyParamCaption})}
+
+
+
+Initializes level encoder state. 
+
+Uses the shared level value, which must be already initialized.
+
+
+\begin{DoxyParams}{Parameters}
+{\em encoder} & Encoder state to initialize. \\
+\hline
+{\em name} & Name of the encoder. \\
+\hline
+{\em sw\+\_\+gpio} & Encoder push-\/button switch GPIO pin. \\
+\hline
+{\em clk\+\_\+gpio} & Encoder CLK GPIO pin. Half of quadrature signal. \\
+\hline
+{\em dt\+\_\+gpio} & Encoder DT GPIO pin. Half of quadrature signal. \\
+\hline
+{\em level\+\_\+max} & Maximum internal level value in quadrature ticks. \\
+\hline
+{\em shared} & Shared state variable holding encoder level. \\
+\hline
+{\em on\+\_\+level\+\_\+change} & Callback invoked when the encoder level changes, or NULL to disable the callback. \\
+\hline
+{\em on\+\_\+sw\+\_\+change} & Callback invoked when the switch value changes, or NULL to disable the callback. \\
+\hline
+\end{DoxyParams}

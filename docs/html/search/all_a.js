@@ -1,0 +1,16 @@
+var searchData=
+[
+  ['implementation_20notes_0',['Design and implementation notes',['../index.html#autotoc_md0',1,'']]],
+  ['increment_5fshared_5fsequence_1',['increment_shared_sequence',['../shared_8h.html#ab07ff471cec36ac6b1938c43dc70531f',1,'shared.h']]],
+  ['initialize_5fled_2',['initialize_led',['../led_8c.html#aa82ba14ada5fc9f6de98eff198af3f86',1,'initialize_led(struct led *led, char *name, gpio_num_t gpio):&#160;led.c'],['../led_8h.html#aa82ba14ada5fc9f6de98eff198af3f86',1,'initialize_led(struct led *led, char *name, gpio_num_t gpio):&#160;led.c']]],
+  ['initialize_5flevel_5fencoder_3',['initialize_level_encoder',['../encoder_8c.html#af341269adc3200b04f701f54d85abce7',1,'initialize_level_encoder(struct level_encoder *encoder, char *name, uint8_t sw_gpio, uint8_t clk_gpio, uint8_t dt_gpio, uint16_t level_max, struct shared *shared, void(*on_level_change)(struct level_encoder *), void(*on_sw_change)(struct level_encoder *)):&#160;encoder.c'],['../encoder_8h.html#af341269adc3200b04f701f54d85abce7',1,'initialize_level_encoder(struct level_encoder *encoder, char *name, uint8_t sw_gpio, uint8_t clk_gpio, uint8_t dt_gpio, uint16_t level_max, struct shared *shared, void(*on_level_change)(struct level_encoder *), void(*on_sw_change)(struct level_encoder *)):&#160;encoder.c']]],
+  ['initialize_5fpwm_4',['initialize_pwm',['../pwm_8c.html#ace748cce63627dcf59bc2bafa0d82bf4',1,'initialize_pwm(struct pwm *pwm, char *name, gpio_num_t gpio, uint16_t init_duty_mils):&#160;pwm.c'],['../pwm_8h.html#ace748cce63627dcf59bc2bafa0d82bf4',1,'initialize_pwm(struct pwm *pwm, char *name, gpio_num_t gpio, uint16_t init_duty_mils):&#160;pwm.c']]],
+  ['initialize_5fpwm_5ftimer_5',['initialize_pwm_timer',['../pwm_8c.html#aff5b65aaa4f0cf5ace17aac1050cb801',1,'initialize_pwm_timer(void):&#160;pwm.c'],['../pwm_8h.html#aff5b65aaa4f0cf5ace17aac1050cb801',1,'initialize_pwm_timer(void):&#160;pwm.c']]],
+  ['initialize_5fshared_6',['initialize_shared',['../shared_8h.html#afd543cfd83a965c18d4518ce51d98dc8',1,'initialize_shared(struct shared *shared):&#160;shared.c'],['../shared_8c.html#afd543cfd83a965c18d4518ce51d98dc8',1,'initialize_shared(struct shared *shared):&#160;shared.c']]],
+  ['initialize_5fstrap_7',['initialize_strap',['../strap_8c.html#a27858ad74a85a6324f007fe3d7a1d524',1,'initialize_strap(struct strap *strap, char *name, gpio_num_t gpio):&#160;strap.c'],['../strap_8h.html#a27858ad74a85a6324f007fe3d7a1d524',1,'initialize_strap(struct strap *strap, char *name, gpio_num_t gpio):&#160;strap.c']]],
+  ['initialize_5fwifi_8',['initialize_wifi',['../wifi_8c.html#a435d6116bb6c900bb7aead8be3c7f48d',1,'initialize_wifi(struct shared *shared, void(*on_receive)(const void *data, uint16_t len)):&#160;wifi.c'],['../wifi_8h.html#a435d6116bb6c900bb7aead8be3c7f48d',1,'initialize_wifi(struct shared *shared, void(*on_receive)(const void *data, uint16_t len)):&#160;wifi.c']]],
+  ['inputs_20option_9',['Pulled inputs option',['../index.html#autotoc_md9',1,'']]],
+  ['is_5fmode_5frecv_10',['IS_MODE_RECV',['../dimmer_8c.html#a1822c39f6b48ee1c6c4c0152f68653a6',1,'dimmer.c']]],
+  ['is_5fmode_5fxmit_11',['IS_MODE_XMIT',['../dimmer_8c.html#ae6baa8dfe690cfb5c96c4c9d9057c61b',1,'dimmer.c']]],
+  ['is_5fstrap_5fpresent_12',['IS_STRAP_PRESENT',['../strap_8h.html#ac2486f37fa17c1ff3d9ddae39d8d3e44',1,'strap.h']]]
+];

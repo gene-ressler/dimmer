@@ -1,0 +1,66 @@
+\doxysection{/home/gene/\+Work/dimmer/main/include/wifi.h File Reference}
+\hypertarget{wifi_8h}{}\label{wifi_8h}\index{/home/gene/Work/dimmer/main/include/wifi.h@{/home/gene/Work/dimmer/main/include/wifi.h}}
+
+
+Wifi broadcast and receive singleton.  
+
+
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include "{}shared.\+h"{}}\newline
+Include dependency graph for wifi.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{wifi_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{wifi_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{wifi_8h_a435d6116bb6c900bb7aead8be3c7f48d}{initialize\+\_\+wifi}} (struct \mbox{\hyperlink{structshared}{shared}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structshared}{shared}}, void(\texorpdfstring{$\ast$}{*}on\+\_\+receive)(const void \texorpdfstring{$\ast$}{*}data, uint16\+\_\+t len))
+\begin{DoxyCompactList}\small\item\em Configures the ESP32\textquotesingle{}s wifi stack for ESP-\/\+NOW broadcasts. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{wifi_8h_adec51955d74e550592e446b48a238740}{send\+\_\+repeated}} (void \texorpdfstring{$\ast$}{*}data, uint16\+\_\+t len, uint16\+\_\+t count)
+\begin{DoxyCompactList}\small\item\em Wraps given data in a payload and broadcasts it repeatedly. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Wifi broadcast and receive singleton. 
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{wifi_8h_a435d6116bb6c900bb7aead8be3c7f48d}\label{wifi_8h_a435d6116bb6c900bb7aead8be3c7f48d} 
+\index{wifi.h@{wifi.h}!initialize\_wifi@{initialize\_wifi}}
+\index{initialize\_wifi@{initialize\_wifi}!wifi.h@{wifi.h}}
+\doxysubsubsection{\texorpdfstring{initialize\_wifi()}{initialize\_wifi()}}
+{\footnotesize\ttfamily void initialize\+\_\+wifi (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structshared}{shared}} \texorpdfstring{$\ast$}{*}}]{shared,  }\item[{void(\texorpdfstring{$\ast$}{*})(const void \texorpdfstring{$\ast$}{*}data, uint16\+\_\+t len)}]{on\+\_\+receive }\end{DoxyParamCaption})}
+
+
+
+Configures the ESP32\textquotesingle{}s wifi stack for ESP-\/\+NOW broadcasts. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em shared} & shared, checkpointed state variables containing broadcast sequence numbers \\
+\hline
+{\em on\+\_\+receive} & callback for valid broadcasts \\
+\hline
+\end{DoxyParams}
+\Hypertarget{wifi_8h_adec51955d74e550592e446b48a238740}\label{wifi_8h_adec51955d74e550592e446b48a238740} 
+\index{wifi.h@{wifi.h}!send\_repeated@{send\_repeated}}
+\index{send\_repeated@{send\_repeated}!wifi.h@{wifi.h}}
+\doxysubsubsection{\texorpdfstring{send\_repeated()}{send\_repeated()}}
+{\footnotesize\ttfamily void send\+\_\+repeated (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{data,  }\item[{uint16\+\_\+t}]{len,  }\item[{uint16\+\_\+t}]{count }\end{DoxyParamCaption})}
+
+
+
+Wraps given data in a payload and broadcasts it repeatedly. 
+
+Returns immediately; repeats continue asynchronously. Causes any previous repeats still in progress to be aborted before starting the new sequence. 

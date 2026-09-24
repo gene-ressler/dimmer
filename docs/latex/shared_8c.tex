@@ -1,0 +1,48 @@
+\doxysection{/home/gene/\+Work/dimmer/main/shared.c File Reference}
+\hypertarget{shared_8c}{}\label{shared_8c}\index{/home/gene/Work/dimmer/main/shared.c@{/home/gene/Work/dimmer/main/shared.c}}
+
+
+Multi-\/thread shared and/or checkpointed state implementation.  
+
+
+{\ttfamily \#include "{}shared.\+h"{}}\newline
+{\ttfamily \#include "{}esp\+\_\+log.\+h"{}}\newline
+Include dependency graph for shared.\+c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{shared_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{shared_8c_afa7779fe56b160955b535cd6a8aaf8f4}\label{shared_8c_afa7779fe56b160955b535cd6a8aaf8f4} 
+\#define {\bfseries NAMESPACE}~"{}dimmer"{}
+\begin{DoxyCompactList}\small\item\em NVS namespace for checkpoints. \end{DoxyCompactList}\item 
+\Hypertarget{shared_8c_a8ae9d53f33f46cfcfcb9736e6351452a}\label{shared_8c_a8ae9d53f33f46cfcfcb9736e6351452a} 
+\#define {\bfseries KEY}~"{}ckpt-\/v1"{}
+\begin{DoxyCompactList}\small\item\em NVS key for checkpoints. \end{DoxyCompactList}\item 
+\Hypertarget{shared_8c_ae845674f54da625e465bdf1e70599ffc}\label{shared_8c_ae845674f54da625e465bdf1e70599ffc} 
+\#define {\bfseries DEBOUNCE\+\_\+\+WAIT\+\_\+\+MS}~800
+\begin{DoxyCompactList}\small\item\em Checkpointer debounce wait period. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{shared_8c_afd543cfd83a965c18d4518ce51d98dc8}\label{shared_8c_afd543cfd83a965c18d4518ce51d98dc8} 
+void {\bfseries initialize\+\_\+shared} (struct \mbox{\hyperlink{structshared}{shared}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structshared}{shared}})
+\begin{DoxyCompactList}\small\item\em Initializes at last checkpoint, if any, and starts the checkpoint task. \end{DoxyCompactList}\item 
+\Hypertarget{shared_8c_a0125899e3342bf7c23ed3d8743fb8aab}\label{shared_8c_a0125899e3342bf7c23ed3d8743fb8aab} 
+void {\bfseries checkpoint} (struct \mbox{\hyperlink{structshared}{shared}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structshared}{shared}})
+\begin{DoxyCompactList}\small\item\em Causes a checkpoint to be recorded asynchronously with debouncing. Thread safe. \end{DoxyCompactList}\item 
+\Hypertarget{shared_8c_a7aca0f10cef849ed64c96085f9f567ba}\label{shared_8c_a7aca0f10cef849ed64c96085f9f567ba} 
+void {\bfseries advance\+\_\+shared\+\_\+sequence} (struct \mbox{\hyperlink{structshared}{shared}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structshared}{shared}}, uint32\+\_\+t from, uint32\+\_\+t to)
+\begin{DoxyCompactList}\small\item\em Advances the shared sequence to a new value if it\textquotesingle{}s greater. Thread safe. \end{DoxyCompactList}\item 
+\Hypertarget{shared_8c_a0c8fd4b17c7b305eb5ecd79258a63bae}\label{shared_8c_a0c8fd4b17c7b305eb5ecd79258a63bae} 
+bool {\bfseries set\+\_\+shared\+\_\+level\+\_\+mils} (struct \mbox{\hyperlink{structshared}{shared}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structshared}{shared}}, int32\+\_\+t to\+\_\+level\+\_\+mils)
+\begin{DoxyCompactList}\small\item\em Sets level clamped to \mbox{[}0..1024\mbox{]}, returning whether a change resulted. Thread safe. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Multi-\/thread shared and/or checkpointed state implementation. 
+

@@ -1,24 +1,29 @@
+/**
+ * @file
+ * @brief Rotary level encoder implementation.
+ */
 #include "encoder.h"
 
 #include "esp_log.h"
 
 static const char tag[] = "encoder";
 
-#define LEVEL_POLL_MS 5
+#define LEVEL_POLL_MS 5  ///< Polling interval (millis).
 
 /** @brief Converts raw level to mils with 32-bit signed arithmetic. */
 #define TO_LEVEL_MILS(E, L) (1024 * (int32_t)(L) / (E)->level_max)
 /** @brief Converts mils to a raw level with 32-bit signed arithmetic. */
 #define TO_RAW_LEVEL(E, M) ((E)->level_max * (int32_t)(M) / 1024)
+/** @brief Returns a 64-bit mask with an N'th bit of 1. */
+#define B(N) (1ULL << (N))
 
-/** Reads the encoder device state as a 2-bit quantity: DT|CLK. */
+/** @brief Reads the encoder device state as a 2-bit quantity: DT|CLK. */
 static inline int32_t read_level_encoder(struct level_encoder *encoder) {
   int32_t clk = gpio_get_level(encoder->clk_gpio);
   int32_t dt = gpio_get_level(encoder->dt_gpio);
   return (dt << 1) | clk;
 }
 
-/** @brief Initializes the level encoder. */
 void initialize_level_encoder(struct level_encoder *encoder, char *name, uint8_t sw_gpio,
                               uint8_t clk_gpio, uint8_t dt_gpio, uint16_t level_max,
                               struct shared *shared,
@@ -39,13 +44,11 @@ void initialize_level_encoder(struct level_encoder *encoder, char *name, uint8_t
   // encoder->level_max must be valid.
   encoder->level = TO_RAW_LEVEL(encoder, get_shared_level_mils(shared));
 
-#define B(N) (1ULL << (N))
   gpio_config_t config[1] = {{.pin_bit_mask = B(sw_gpio) | B(clk_gpio) | B(dt_gpio),
                               .mode = GPIO_MODE_INPUT,
                               .pull_up_en = GPIO_PULLUP_ENABLE,
                               .pull_down_en = GPIO_PULLDOWN_DISABLE,
                               .intr_type = GPIO_INTR_DISABLE}};
-#undef B
   gpio_config(config);
 }
 
@@ -55,7 +58,7 @@ void set_level_mils(struct level_encoder *encoder, uint16_t level_mils) {
   encoder->level = TO_RAW_LEVEL(encoder, get_shared_level_mils(encoder->shared));
 }
 
-/** Table mapping last two states to increment implied by quadrature. */
+/** @brief Table mapping last two states to increment implied by quadrature. */
 // clang-format off
 static const int8_t increment_by_state_pair[] = {
    0, -1,  1,  0, 
@@ -65,7 +68,7 @@ static const int8_t increment_by_state_pair[] = {
 };
 // clang-format on
 
-/** Handles the level sensing polling callback. */
+/** @brief Handles the level sensing polling callback. */
 static void level_encoder_sense_callback(TimerHandle_t timer) {
   struct level_encoder *encoder = pvTimerGetTimerID(timer);
   uint8_t old_sw_value = encoder->sw_value;

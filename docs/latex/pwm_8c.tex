@@ -1,0 +1,98 @@
+\doxysection{/home/gene/\+Work/dimmer/main/pwm.c File Reference}
+\hypertarget{pwm_8c}{}\label{pwm_8c}\index{/home/gene/Work/dimmer/main/pwm.c@{/home/gene/Work/dimmer/main/pwm.c}}
+
+
+PWM output implementation.  
+
+
+{\ttfamily \#include "{}pwm.\+h"{}}\newline
+{\ttfamily \#include "{}driver/ledc.\+h"{}}\newline
+Include dependency graph for pwm.\+c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=297pt]{pwm_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{pwm_8c_aa0308d9cb1b31fb1995dc8433a16556b}\label{pwm_8c_aa0308d9cb1b31fb1995dc8433a16556b} 
+\#define {\bfseries LEDC\+\_\+\+TIMER}~LEDC\+\_\+\+TIMER\+\_\+0
+\begin{DoxyCompactList}\small\item\em Timer to use for PWM. \end{DoxyCompactList}\item 
+\Hypertarget{pwm_8c_adaeb1cfe90b02710d73c9eb032e05bb6}\label{pwm_8c_adaeb1cfe90b02710d73c9eb032e05bb6} 
+\#define {\bfseries LEDC\+\_\+\+MODE}~LEDC\+\_\+\+LOW\+\_\+\+SPEED\+\_\+\+MODE
+\begin{DoxyCompactList}\small\item\em Control mode to use for PWM. \end{DoxyCompactList}\item 
+\Hypertarget{pwm_8c_ae465e83600c230b058b9e40ac73d2f12}\label{pwm_8c_ae465e83600c230b058b9e40ac73d2f12} 
+\#define {\bfseries LEDC\+\_\+\+CHANNEL}~LEDC\+\_\+\+CHANNEL\+\_\+0
+\begin{DoxyCompactList}\small\item\em Control channel to use for PWM. \end{DoxyCompactList}\item 
+\Hypertarget{pwm_8c_a2ef79fb32dcc151508bf858adee1d8fb}\label{pwm_8c_a2ef79fb32dcc151508bf858adee1d8fb} 
+\#define {\bfseries LEDC\+\_\+\+DUTY\+\_\+\+RES}~LEDC\+\_\+\+TIMER\+\_\+7\+\_\+\+BIT
+\begin{DoxyCompactList}\small\item\em Timer resolution for PWM. \end{DoxyCompactList}\item 
+\Hypertarget{pwm_8c_a5b66840ffe7f108c10d5b19c1a50407e}\label{pwm_8c_a5b66840ffe7f108c10d5b19c1a50407e} 
+\#define {\bfseries LEDC\+\_\+\+PWM\+\_\+\+FRAME\+\_\+\+RATE}~1000
+\begin{DoxyCompactList}\small\item\em Frame rate (hz) for output PWM signal. \end{DoxyCompactList}\item 
+\Hypertarget{pwm_8c_a4c1b5b7def4b47169a85af2c4907aabe}\label{pwm_8c_a4c1b5b7def4b47169a85af2c4907aabe} 
+\#define {\bfseries MILS\+\_\+\+TO\+\_\+\+DUTY}(M)~((M) / 8)
+\begin{DoxyCompactList}\small\item\em Converts \mbox{[}0..1024\mbox{]} to PWM duty cycle. \end{DoxyCompactList}\item 
+\Hypertarget{pwm_8c_a7910d8d3dca6a4351a135df69f6aa46a}\label{pwm_8c_a7910d8d3dca6a4351a135df69f6aa46a} 
+\#define {\bfseries DUTY\+\_\+\+TO\+\_\+\+MILS}(D)~((D) \texorpdfstring{$\ast$}{*} 8)
+\begin{DoxyCompactList}\small\item\em Converts PWM duty cycle to \mbox{[}0..1024\mbox{]}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{pwm_8c_aff5b65aaa4f0cf5ace17aac1050cb801}\label{pwm_8c_aff5b65aaa4f0cf5ace17aac1050cb801} 
+void {\bfseries initialize\+\_\+pwm\+\_\+timer} (void)
+\begin{DoxyCompactList}\small\item\em Initializes the timer needed for all PWMs. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{pwm_8c_ace748cce63627dcf59bc2bafa0d82bf4}{initialize\+\_\+pwm}} (struct \mbox{\hyperlink{structpwm}{pwm}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structpwm}{pwm}}, char \texorpdfstring{$\ast$}{*}name, gpio\+\_\+num\+\_\+t gpio, uint16\+\_\+t init\+\_\+duty\+\_\+mils)
+\begin{DoxyCompactList}\small\item\em Initializes a single PWM output and starts it running. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{pwm_8c_a89adbd64346559ce2e9ede4e963f099d}{set\+\_\+pwm\+\_\+duty\+\_\+mils}} (struct \mbox{\hyperlink{structpwm}{pwm}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structpwm}{pwm}}, uint16\+\_\+t duty\+\_\+mils)
+\begin{DoxyCompactList}\small\item\em Sets the duty cycle of a previously initialized PWM. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+PWM output implementation. 
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{pwm_8c_ace748cce63627dcf59bc2bafa0d82bf4}\label{pwm_8c_ace748cce63627dcf59bc2bafa0d82bf4} 
+\index{pwm.c@{pwm.c}!initialize\_pwm@{initialize\_pwm}}
+\index{initialize\_pwm@{initialize\_pwm}!pwm.c@{pwm.c}}
+\doxysubsubsection{\texorpdfstring{initialize\_pwm()}{initialize\_pwm()}}
+{\footnotesize\ttfamily void initialize\+\_\+pwm (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structpwm}{pwm}} \texorpdfstring{$\ast$}{*}}]{pwm,  }\item[{char \texorpdfstring{$\ast$}{*}}]{name,  }\item[{gpio\+\_\+num\+\_\+t}]{gpio,  }\item[{uint16\+\_\+t}]{init\+\_\+duty\+\_\+mils }\end{DoxyParamCaption})}
+
+
+
+Initializes a single PWM output and starts it running. 
+
+Sets up the GPIO output pin.
+
+
+\begin{DoxyParams}{Parameters}
+{\em pwm} & PWM data to initialize \\
+\hline
+{\em name} & name of the PWM output for logging \\
+\hline
+{\em gpio} & PWM output GPIO pin number \\
+\hline
+{\em init\+\_\+duty\+\_\+mils} & initial duty cycle in 1024ths. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{pwm_8c_a89adbd64346559ce2e9ede4e963f099d}\label{pwm_8c_a89adbd64346559ce2e9ede4e963f099d} 
+\index{pwm.c@{pwm.c}!set\_pwm\_duty\_mils@{set\_pwm\_duty\_mils}}
+\index{set\_pwm\_duty\_mils@{set\_pwm\_duty\_mils}!pwm.c@{pwm.c}}
+\doxysubsubsection{\texorpdfstring{set\_pwm\_duty\_mils()}{set\_pwm\_duty\_mils()}}
+{\footnotesize\ttfamily void set\+\_\+pwm\+\_\+duty\+\_\+mils (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structpwm}{pwm}} \texorpdfstring{$\ast$}{*}}]{pwm,  }\item[{uint16\+\_\+t}]{duty\+\_\+mils }\end{DoxyParamCaption})}
+
+
+
+Sets the duty cycle of a previously initialized PWM. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pwm} & PWM data to set \\
+\hline
+{\em duty\+\_\+mils} & new duty cycle in 1024ths \\
+\hline
+\end{DoxyParams}

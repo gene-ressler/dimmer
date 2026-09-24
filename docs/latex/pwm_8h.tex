@@ -1,0 +1,86 @@
+\doxysection{/home/gene/\+Work/dimmer/main/include/pwm.h File Reference}
+\hypertarget{pwm_8h}{}\label{pwm_8h}\index{/home/gene/Work/dimmer/main/include/pwm.h@{/home/gene/Work/dimmer/main/include/pwm.h}}
+
+
+PWM output.  
+
+
+{\ttfamily \#include "{}driver/gpio.\+h"{}}\newline
+{\ttfamily \#include "{}freertos/\+Free\+RTOS.\+h"{}}\newline
+Include dependency graph for pwm.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=290pt]{pwm_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{pwm_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structpwm}{pwm}}
+\begin{DoxyCompactList}\small\item\em Data for a GPIO pin serving as a PWM output. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{pwm_8h_aff5b65aaa4f0cf5ace17aac1050cb801}\label{pwm_8h_aff5b65aaa4f0cf5ace17aac1050cb801} 
+void {\bfseries initialize\+\_\+pwm\+\_\+timer} (void)
+\begin{DoxyCompactList}\small\item\em Initializes the timer needed for all PWMs. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{pwm_8h_ace748cce63627dcf59bc2bafa0d82bf4}{initialize\+\_\+pwm}} (struct \mbox{\hyperlink{structpwm}{pwm}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structpwm}{pwm}}, char \texorpdfstring{$\ast$}{*}name, gpio\+\_\+num\+\_\+t gpio, uint16\+\_\+t init\+\_\+duty\+\_\+mils)
+\begin{DoxyCompactList}\small\item\em Initializes a single PWM output and starts it running. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{pwm_8h_a89adbd64346559ce2e9ede4e963f099d}{set\+\_\+pwm\+\_\+duty\+\_\+mils}} (struct \mbox{\hyperlink{structpwm}{pwm}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structpwm}{pwm}}, uint16\+\_\+t duty\+\_\+mils)
+\begin{DoxyCompactList}\small\item\em Sets the duty cycle of a previously initialized PWM. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+PWM output. 
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{pwm_8h_ace748cce63627dcf59bc2bafa0d82bf4}\label{pwm_8h_ace748cce63627dcf59bc2bafa0d82bf4} 
+\index{pwm.h@{pwm.h}!initialize\_pwm@{initialize\_pwm}}
+\index{initialize\_pwm@{initialize\_pwm}!pwm.h@{pwm.h}}
+\doxysubsubsection{\texorpdfstring{initialize\_pwm()}{initialize\_pwm()}}
+{\footnotesize\ttfamily void initialize\+\_\+pwm (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structpwm}{pwm}} \texorpdfstring{$\ast$}{*}}]{pwm,  }\item[{char \texorpdfstring{$\ast$}{*}}]{name,  }\item[{gpio\+\_\+num\+\_\+t}]{gpio,  }\item[{uint16\+\_\+t}]{init\+\_\+duty\+\_\+mils }\end{DoxyParamCaption})}
+
+
+
+Initializes a single PWM output and starts it running. 
+
+Sets up the GPIO output pin.
+
+
+\begin{DoxyParams}{Parameters}
+{\em pwm} & PWM data to initialize \\
+\hline
+{\em name} & name of the PWM output for logging \\
+\hline
+{\em gpio} & PWM output GPIO pin number \\
+\hline
+{\em init\+\_\+duty\+\_\+mils} & initial duty cycle in 1024ths. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{pwm_8h_a89adbd64346559ce2e9ede4e963f099d}\label{pwm_8h_a89adbd64346559ce2e9ede4e963f099d} 
+\index{pwm.h@{pwm.h}!set\_pwm\_duty\_mils@{set\_pwm\_duty\_mils}}
+\index{set\_pwm\_duty\_mils@{set\_pwm\_duty\_mils}!pwm.h@{pwm.h}}
+\doxysubsubsection{\texorpdfstring{set\_pwm\_duty\_mils()}{set\_pwm\_duty\_mils()}}
+{\footnotesize\ttfamily void set\+\_\+pwm\+\_\+duty\+\_\+mils (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structpwm}{pwm}} \texorpdfstring{$\ast$}{*}}]{pwm,  }\item[{uint16\+\_\+t}]{duty\+\_\+mils }\end{DoxyParamCaption})}
+
+
+
+Sets the duty cycle of a previously initialized PWM. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pwm} & PWM data to set \\
+\hline
+{\em duty\+\_\+mils} & new duty cycle in 1024ths \\
+\hline
+\end{DoxyParams}
