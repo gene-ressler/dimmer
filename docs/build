@@ -1,0 +1,3 @@
+#! /bin/bash
+doxygen dimmer.cfg
+(cd latex && make && mv refman.pdf ../dimmer.pdf && make clean)
