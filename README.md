@@ -63,3 +63,24 @@ ascending. All nodes checkpoint sequence numbers to NV storage and re-load them 
 - 1 x 10k resistor
 - 2 x 100nf capacitor
 - LM358P op amp
+
+### Receiver output circuit
+
+The receiver output consists of a filter that transforms PWM output to an analog voltage level
+between 0 and 3.3 volts. Following this is an op-amp stage that multiplies this by 3 to provide the
+necessary 0-10 volt dimming signal. There are two variations of the output.
+
+The simplest option is a non-inverting circuit with the op amp powered by 12vdc. LM358P can safely
+source 20ma and sink 10ma, which is likely to be enough. If more current is needed, use a higher
+capacity part like OPA1656. A discrete pass transistor after the op amp is another possibility.
+
+Another option is available if the controller being driven needs its input only to be "pulled
+together" from a pre-existing potential differential of 10 or more volts toward zero. My controller
+works this way. Its 0-10 volt input behaves like a 15 volt source in series with a 30k resistor.
+Short circuit (0 volt) current is 0.5ma. By using a discrete pass transistor to do the pulling, the
+op amp can do with a 5 volt supply, which can be shared with the ESP32.
+
+This schematic shows the filter connected to both kinds of op amp output. Since the LM358 is a dual
+device, both can be wired on the same board at little extra cost.
+
+<img src="img/schematic.png" width="1000">
