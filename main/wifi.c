@@ -21,7 +21,7 @@ static const char tag[] = "wifi";
 static const uint8_t broadcast_mac[ESP_NOW_ETH_ALEN] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
 #define WIFI_CHANNEL 3             ///< Broadcast channel.
-#define SEND_INTERVAL_MS 2000      ///< Delay between repeated broadcasts.
+#define SEND_INTERVAL_MS 200       ///< Delay between repeated broadcasts.
 #define WIFI_TASK_STACK_SIZE 4096  ///< Wifi repeated send task stack size.
 
 #define PAYLOAD_HEADER_SIZE 22  ///< Size of payload header (bytes).
