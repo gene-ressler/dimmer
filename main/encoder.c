@@ -69,7 +69,7 @@ static const int8_t increment_by_state_pair[] = {
 // clang-format on
 
 /** @brief Handles the level sensing polling callback. */
-static void level_encoder_sense_callback(TimerHandle_t timer) {
+static void on_level_sense_timer_expiry(TimerHandle_t timer) {
   struct level_encoder *encoder = pvTimerGetTimerID(timer);
   uint8_t old_sw_value = encoder->sw_value;
   encoder->sw_value = gpio_get_level(encoder->sw_gpio);
@@ -92,6 +92,6 @@ static void level_encoder_sense_callback(TimerHandle_t timer) {
 void start_level_encoder_sense(struct level_encoder *encoder) {
   ESP_LOGI(tag, "start sense");
   encoder->timer = xTimerCreateStatic(encoder->name, pdMS_TO_TICKS(LEVEL_POLL_MS), pdTRUE, encoder,
-                                      level_encoder_sense_callback, encoder->timer_state);
+                                      on_level_sense_timer_expiry, encoder->timer_state);
   xTimerStart(encoder->timer, 0);
 }
