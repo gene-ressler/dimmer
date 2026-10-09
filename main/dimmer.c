@@ -19,10 +19,10 @@
 #include "wifi.h"
 
 #define RECV_STRAP_GPIO 19            ///< Ground strap for receiver selection gpio pin.
-#define LEVEL_SW_GPIO 21              ///< Rotary encoder push switch gpio pin.
-#define LEVEL_CLK_GPIO 22             ///< Rotary encoder quadrature signal gpio pin.
-#define LEVEL_DT_GPIO 23              ///< Rotary encoder quadrature signal gpio pin.
-#define CTRL_OUT_GPIO 25              ///< PWM output gpio pin.
+#define LEVEL_SW_GPIO 25              ///< Rotary encoder push switch gpio pin.
+#define LEVEL_CLK_GPIO 26             ///< Rotary encoder quadrature signal gpio pin.
+#define LEVEL_DT_GPIO 27              ///< Rotary encoder quadrature signal gpio pin.
+#define CTRL_OUT_GPIO 27              ///< PWM output gpio pin.
 #define LEVEL_MAX 64                  ///< Rotary quadrature clicks for 10 volts.
 #define STARTUP_SEND_REPEAT_COUNT 15  ///< Number of broadcast repeats on power up.
 #define STANDARD_SEND_REPEAT_COUNT 5  ///< Number of broadcast repeats on level change.
