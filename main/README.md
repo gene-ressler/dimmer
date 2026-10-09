@@ -1,4 +1,4 @@
-\mainpage Wireless 0-10 volt lignt dimmer
+\mainpage Wireless 0-10 volt light dimmer
 
 # Design and implementation notes
 
