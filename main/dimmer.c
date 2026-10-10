@@ -76,16 +76,16 @@ static void on_receive(const void *data, uint16_t len) {
   uint16_t level_mils = ((struct dimmer_payload *)data)->level_mils;
   ESP_LOGD(tag, "receive=%u", level_mils);
   if (IS_MODE_XMIT) {
-    // Sync encoder to level sent by a different transmitter.
+    // Sync encoder and shared level to the one sent by a different transmitter.
     set_level_mils(encoder, level_mils);
-    return;
+  } else {
+    // For receiver, update PWM output and shared level for checkpoint.
+    set_pwm_duty_mils(pwm, level_mils);
+    set_shared_level_mils(shared, level_mils);
   }
-  // For receiver, update PWM output.
-  set_pwm_duty_mils(pwm, level_mils);
-  set_led_flash_count(led, MILS_TO_FLASH_COUNT(level_mils));
-  // Checkpoint new level and sequence.
-  set_shared_level_mils(shared, level_mils);
+  // Checkpoint updated shared level.
   checkpoint(shared);
+  set_led_flash_count(led, MILS_TO_FLASH_COUNT(level_mils));
 }
 
 /** @brief Handles firmware entry call. */
