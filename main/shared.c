@@ -70,7 +70,6 @@ static void checkpoint_task(void *parameters) {
 }
 
 void initialize_shared(struct shared *shared) {
-  shared->checkpoint_task = NULL;
   ESP_ERROR_CHECK(nvs_open(NAMESPACE, NVS_READWRITE, &shared->nvs));
   if (!restore_checkpoint(shared)) {
     memset(shared->checkpoint, 0, sizeof *shared->checkpoint);
