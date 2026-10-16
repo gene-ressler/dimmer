@@ -23,7 +23,7 @@ about $80 for a transmitter/receiver pair and $53 for each additional receiver.
 
 ## Useful details
 
-Transmitters and receivers run the same firmware. A GPIO pin (see wifi.c for number) strapped to
+Transmitters and receivers run the same firmware. A GPIO pin (see dimmer.c for number) strapped to
 ground makes the device a receiver, else it's a transmitter.
 
 Pressing the rotary encoder's shaft pushbutton-style forces a broadcast in case any receiver falls
