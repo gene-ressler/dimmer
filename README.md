@@ -88,9 +88,13 @@ this way. The 0-10 volt input behaves as a 15 volt source in series with a ~100k
 circuit (0 volt) current is therefore 0.15ma. By using a discrete pass transistor to do the pulling,
 the op amp can use a 5 volt supply shared with the ESP32. My devices use this option. It works well.
 
-This schematic shows the filter connected to both kinds of op amp output. Since the LM358 is a dual
+This schematic shows the filter connected to both kinds of op amp output. Note that the VPULSE and
+15VDC sources are for simulation purposes only. Ignore them for construction. Since the LM358 is a dual
 device, both can be wired on the same board at little extra cost if desired. Of course if using a 5
-volt VCC, the simple op amp circuit won't work correctly.
+volt VCC, the simple op amp circuit won't work correctly. If you use only one half ot eh LM358,
+the datasheet specifies configuring it as a unity gain amp (output tied to minus input) and positive
+input to roughly half the supply. The 3.3V pin of the dev board is useful here, or add a voltage
+divider with a couple of 1 megohm resistors.
 
 <img src="img/schematic.png" width="1000">
 
@@ -98,8 +102,8 @@ volt VCC, the simple op amp circuit won't work correctly.
 
 I built my prototypes on standard prototyping perf board to keep cost down. I essentially designed a
 double-sided PCB on a 0.1 inch grid, made "traces" out of 24 gauge copper wire, and installed
-components as usual. Neither power modules nor EC11 encoders fitted the grid exactly. Drilling extra
-holes fixed that.
+components as usual. Neither power modules nor EC11 encoders fit the grid exactly. Drilling extra
+holes was necessary.
 
 ### PC Boards
 
